@@ -1,4 +1,5 @@
 "use client";
+import Footer from "@/components/Shared/Footer/Footer";
 import Navbar from "@/components/Shared/Navbar/Navbar";
 import { ThemeProvider } from "@emotion/react";
 import { CssBaseline, createTheme } from "@mui/material";
@@ -44,7 +45,8 @@ const CommonLayout = ({ children }: { children: React.ReactNode }) => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Navbar toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
-      {children}
+      <div className="min-h-screen">{children}</div>
+      <Footer />
     </ThemeProvider>
   );
 };
