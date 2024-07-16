@@ -1,5 +1,181 @@
-const Navbar = () => {
-  return <div>Navbar</div>;
+import MenuIcon from "@mui/icons-material/Menu";
+import { Container } from "@mui/material";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Stack from "@mui/material/Stack";
+import Switch from "@mui/material/Switch";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Link from "next/link";
+import React, { MouseEvent, useState } from "react";
+
+interface NavbarProps {
+  toggleDarkMode: () => void;
+  darkMode: boolean;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleMenuOpen = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <Container maxWidth={"xl"}>
+      <AppBar
+        position="static"
+        sx={{
+          backgroundColor: "transparent",
+          boxShadow: "none",
+          color: darkMode ? "white" : "black",
+        }}
+      >
+        <Toolbar>
+          <Typography
+            variant="h4"
+            fontWeight={700}
+            sx={{
+              flexGrow: 1,
+              display: { xs: "flex", md: "flex" },
+            }}
+          >
+            Flat<Stack color={"primary.main"}>Match</Stack>
+          </Typography>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex" },
+              justifyContent: "center",
+            }}
+          >
+            <Link href={"/"}>
+              <Typography
+                variant="h6"
+                sx={{ mx: 2, fontWeight: 600, "&:hover": { color: "#ed5311" } }}
+              >
+                Home
+              </Typography>
+            </Link>
+            <Link href={"/dashboard"}>
+              <Typography
+                variant="h6"
+                sx={{ mx: 2, fontWeight: 600, "&:hover": { color: "#ed5311" } }}
+              >
+                Dashboard
+              </Typography>
+            </Link>
+            <Link href={"/about"}>
+              <Typography
+                variant="h6"
+                sx={{ mx: 2, fontWeight: 600, "&:hover": { color: "#ed5311" } }}
+              >
+                About Us
+              </Typography>
+            </Link>
+            <Link href={"/flats"}>
+              <Typography
+                variant="h6"
+                sx={{ mx: 2, fontWeight: 600, "&:hover": { color: "#ed5311" } }}
+              >
+                Flats
+              </Typography>
+            </Link>
+            <Link href={"/contact"}>
+              <Typography
+                variant="h6"
+                sx={{ mx: 2, fontWeight: 600, "&:hover": { color: "#ed5311" } }}
+              >
+                Contact Us
+              </Typography>
+            </Link>
+          </Box>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ display: { xs: "none", md: "flex" } }}
+          >
+            <Button>Login</Button>
+            <Switch checked={darkMode} onChange={toggleDarkMode} />
+          </Stack>
+          <Box sx={{ display: { xs: "flex", md: "none" } }}>
+            <IconButton
+              size="large"
+              edge="end"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleMenuOpen}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              sx={{
+                color: "#ed5311",
+              }}
+              anchorEl={anchorEl}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              PaperProps={{
+                style: {
+                  width: "100%",
+                  marginTop: "8px",
+                },
+              }}
+            >
+              <MenuItem
+                sx={{ fontWeight: 600, "&:hover": { color: "#ed5311" } }}
+                onClick={handleMenuClose}
+              >
+                <Link href={"/"}>Home</Link>
+              </MenuItem>
+              <MenuItem
+                sx={{ fontWeight: 600, "&:hover": { color: "#ed5311" } }}
+                onClick={handleMenuClose}
+              >
+                <Link href={"/dashboard"}>Dashboard</Link>
+              </MenuItem>
+              <MenuItem
+                sx={{ fontWeight: 600, "&:hover": { color: "#ed5311" } }}
+                onClick={handleMenuClose}
+              >
+                <Link href={"/about"}>About Us</Link>
+              </MenuItem>
+              <MenuItem
+                sx={{ fontWeight: 600, "&:hover": { color: "#ed5311" } }}
+                onClick={handleMenuClose}
+              >
+                <Link href={"/flats"}>Flats</Link>
+              </MenuItem>
+              <MenuItem
+                sx={{ fontWeight: 600, "&:hover": { color: "#ed5311" } }}
+                onClick={handleMenuClose}
+              >
+                <Link href={"/contact"}>Contact Us</Link>
+              </MenuItem>
+              <MenuItem>
+                <Stack direction="row" alignItems="center" spacing={1}>
+                  <Switch checked={darkMode} onChange={toggleDarkMode} />
+                </Stack>
+              </MenuItem>
+              <MenuItem>
+                <Button onClick={handleMenuClose}>Login</Button>
+              </MenuItem>
+            </Menu>
+          </Box>
+        </Toolbar>
+      </AppBar>
+    </Container>
+  );
 };
 
 export default Navbar;
