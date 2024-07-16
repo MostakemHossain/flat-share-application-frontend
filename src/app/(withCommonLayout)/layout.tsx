@@ -4,7 +4,7 @@ import { ThemeProvider } from "@emotion/react";
 import { CssBaseline, createTheme } from "@mui/material";
 import { useState } from "react";
 
-const commonLayout = ({ children }: { children: React.ReactNode }) => {
+const CommonLayout = ({ children }: { children: React.ReactNode }) => {
   const [darkMode, setDarkMode] = useState(false);
 
   const toggleDarkMode = () => {
@@ -39,12 +39,14 @@ const commonLayout = ({ children }: { children: React.ReactNode }) => {
       },
     },
   });
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Navbar toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+      {children}
     </ThemeProvider>
   );
 };
 
-export default commonLayout;
+export default CommonLayout;
