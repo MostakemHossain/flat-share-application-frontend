@@ -28,7 +28,6 @@ const SearchBox = () => {
         component="h5"
         sx={{
           marginBottom: "10px",
-          marginTop: "80px",
           fontWeight: 600,
           textAlign: "center",
         }}
