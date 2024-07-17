@@ -26,7 +26,7 @@ const JoinAgent = () => {
           Want To Become A Real Estate Agent?
         </Typography>
         <Typography variant="subtitle1" component="div">
-          We'll help you to grow your career and growth.
+          We&apos;ll help you to grow your career and growth.
         </Typography>
       </Box>
       <Button
@@ -38,7 +38,7 @@ const JoinAgent = () => {
             backgroundColor: "#f1f1f1",
             color: "#0c0c0c",
           },
-          minWidth: "150px",
+          minWidth: "150px", // Ensure button doesn't shrink too small
         }}
       >
         SignUp Today
