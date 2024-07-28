@@ -5,7 +5,7 @@ const FeatureFlatSection = () => {
   const flats = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   return (
-    <Box sx={{ py: 8, backgroundColor: "#f5f5f5" }}>
+    <Box sx={{ py: 8 }}>
       <Container maxWidth="xl">
         <Typography variant="h3" fontWeight={600} align="center" gutterBottom>
           Explore Our Featured Flats
