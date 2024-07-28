@@ -5,7 +5,7 @@ const JoinAgent = () => {
     <Box
       sx={{
         display: "flex",
-        flexDirection: { xs: "column", md: "row" }, // Stack columns on mobile, side-by-side on medium screens
+        flexDirection: { xs: "column", md: "row" },
         justifyContent: "space-between",
         alignItems: "center",
         backgroundColor: "primary.main",
@@ -38,7 +38,7 @@ const JoinAgent = () => {
             backgroundColor: "#f1f1f1",
             color: "#0c0c0c",
           },
-          minWidth: "150px", // Ensure button doesn't shrink too small
+          minWidth: "150px",
         }}
       >
         SignUp Today

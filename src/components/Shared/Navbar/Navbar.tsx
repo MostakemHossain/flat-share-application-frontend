@@ -1,17 +1,20 @@
 import MenuIcon from "@mui/icons-material/Menu";
-import { Container } from "@mui/material";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Stack from "@mui/material/Stack";
-import Switch from "@mui/material/Switch";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
+  Switch,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import Link from "next/link";
 import React, { MouseEvent, useState } from "react";
+import SignInModal from "./SignInModal";
 
 interface NavbarProps {
   toggleDarkMode: () => void;
@@ -20,6 +23,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [open, setOpen] = useState(false);
 
   const handleMenuOpen = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -27,6 +31,14 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -103,7 +115,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
             spacing={2}
             sx={{ display: { xs: "none", md: "flex" } }}
           >
-            <Button>Login</Button>
+            <Button onClick={handleOpen}>Login</Button>
             <Switch checked={darkMode} onChange={toggleDarkMode} />
           </Stack>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
@@ -168,12 +180,14 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
                 </Stack>
               </MenuItem>
               <MenuItem>
-                <Button onClick={handleMenuClose}>Login</Button>
+                <Button onClick={handleOpen}>Login</Button>
               </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
       </AppBar>
+
+      <SignInModal open={open} onClose={handleClose} />
     </Container>
   );
 };
