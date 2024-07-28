@@ -2,7 +2,7 @@ import { Box, Container, Grid, Typography } from "@mui/material";
 import HotFlatCard from "./HotFlatCard";
 
 const HotFlat = () => {
-  const flats = [1, 2, 3]; // Dummy data to map over
+  const flats = [1, 2, 3];
 
   return (
     <Container maxWidth="xl">
