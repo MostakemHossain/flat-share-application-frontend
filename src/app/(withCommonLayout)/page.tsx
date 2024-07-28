@@ -1,3 +1,4 @@
+import AboutSection from "@/components/UI/HomePage/AboutUs/AboutUs";
 import HeroSection from "@/components/UI/HomePage/HeroSection/HeroSection";
 import HotFlat from "@/components/UI/HomePage/HotFlat/HotFlat";
 import HowItWorks from "@/components/UI/HomePage/HowItWorks/HowItWorks";
@@ -10,6 +11,7 @@ const HomePage = () => {
       <HeroSection />
       <SearchBox />
       <HotFlat />
+      <AboutSection />
       <HowItWorks />
       <JoinAgent />
     </>
