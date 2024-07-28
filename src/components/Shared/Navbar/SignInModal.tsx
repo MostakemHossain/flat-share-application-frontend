@@ -108,7 +108,7 @@ const SignInModal: React.FC<SignInModalProps> = ({
           }}
           variant="body2"
         >
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Box
             sx={{
               color: "#ed5311",
