@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import React, { MouseEvent, useState } from "react";
 import SignInModal from "./SignInModal";
+import SignUpModal from "./SignUpModal";
 
 interface NavbarProps {
   toggleDarkMode: () => void;
@@ -23,7 +24,8 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [open, setOpen] = useState(false);
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
 
   const handleMenuOpen = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -33,12 +35,32 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
     setAnchorEl(null);
   };
 
-  const handleOpen = () => {
-    setOpen(true);
+  const handleSignInOpen = () => {
+    setIsSignInOpen(true);
+    setIsSignUpOpen(false);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleSignInClose = () => {
+    setIsSignInOpen(false);
+  };
+
+  const handleSignUpOpen = () => {
+    setIsSignUpOpen(true);
+    setIsSignInOpen(false);
+  };
+
+  const handleSignUpClose = () => {
+    setIsSignUpOpen(false);
+  };
+
+  const handleSwitchToSignUp = () => {
+    setIsSignInOpen(false);
+    setIsSignUpOpen(true);
+  };
+
+  const handleSwitchToSignIn = () => {
+    setIsSignUpOpen(false);
+    setIsSignInOpen(true);
   };
 
   return (
@@ -115,7 +137,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
             spacing={2}
             sx={{ display: { xs: "none", md: "flex" } }}
           >
-            <Button onClick={handleOpen}>Login</Button>
+            <Button onClick={handleSignInOpen}>Login</Button>
             <Switch checked={darkMode} onChange={toggleDarkMode} />
           </Stack>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
@@ -180,14 +202,23 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
                 </Stack>
               </MenuItem>
               <MenuItem>
-                <Button onClick={handleOpen}>Login</Button>
+                <Button onClick={handleSignInOpen}>Login</Button>
               </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
       </AppBar>
 
-      <SignInModal open={open} onClose={handleClose} />
+      <SignInModal
+        open={isSignInOpen}
+        onClose={handleSignInClose}
+        onSwitchToSignUp={handleSwitchToSignUp}
+      />
+      <SignUpModal
+        open={isSignUpOpen}
+        onClose={handleSignUpClose}
+        onSwitchToSignIn={handleSwitchToSignIn}
+      />
     </Container>
   );
 };

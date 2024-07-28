@@ -11,19 +11,18 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import Link from "next/link";
 import React from "react";
 
-interface SignInModalProps {
+interface SignUpModalProps {
   open: boolean;
   onClose: () => void;
-  onSwitchToSignUp: () => void;
+  onSwitchToSignIn: () => void;
 }
 
-const SignInModal: React.FC<SignInModalProps> = ({
+const SignUpModal: React.FC<SignUpModalProps> = ({
   open,
   onClose,
-  onSwitchToSignUp,
+  onSwitchToSignIn,
 }) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -37,7 +36,7 @@ const SignInModal: React.FC<SignInModalProps> = ({
           justifyContent="space-between"
           alignItems="center"
         >
-          Sign in to your account
+          Register in your account
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
@@ -45,6 +44,22 @@ const SignInModal: React.FC<SignInModalProps> = ({
       </DialogTitle>
       <DialogContent>
         <Box component="form" noValidate autoComplete="off">
+          <TextField
+            margin="dense"
+            label="Full Name"
+            type="text"
+            fullWidth
+            variant="outlined"
+            required
+          />
+          <TextField
+            margin="dense"
+            label="Username"
+            type="text"
+            fullWidth
+            variant="outlined"
+            required
+          />
           <TextField
             margin="dense"
             label="Email"
@@ -67,22 +82,7 @@ const SignInModal: React.FC<SignInModalProps> = ({
             justifyContent="space-between"
             mt={2}
           >
-            <Box>
-              <input type="checkbox" id="remember" name="remember" />
-              <label htmlFor="remember"> Remember me</label>
-            </Box>
-            <Link href="/forgot-password">
-              <Typography
-                sx={{
-                  color: "#ed5311",
-                  fontWeight: "600",
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                }}
-              >
-                Forgot password?
-              </Typography>
-            </Link>
+            
           </Stack>
         </Box>
       </DialogContent>
@@ -95,7 +95,7 @@ const SignInModal: React.FC<SignInModalProps> = ({
         }}
       >
         <Button variant="contained" color="primary">
-          Sign In
+          Sign Up
         </Button>
       </DialogActions>
       <Box textAlign="center" py={2}>
@@ -108,7 +108,7 @@ const SignInModal: React.FC<SignInModalProps> = ({
           }}
           variant="body2"
         >
-          Don't have an account?{" "}
+          Already have an account?{" "}
           <Box
             sx={{
               color: "#ed5311",
@@ -116,9 +116,9 @@ const SignInModal: React.FC<SignInModalProps> = ({
               textDecoration: "underline",
               cursor: "pointer",
             }}
-            onClick={onSwitchToSignUp}
+            onClick={onSwitchToSignIn}
           >
-            Sign up
+            Sign in
           </Box>
         </Typography>
       </Box>
@@ -126,4 +126,4 @@ const SignInModal: React.FC<SignInModalProps> = ({
   );
 };
 
-export default SignInModal;
+export default SignUpModal;
