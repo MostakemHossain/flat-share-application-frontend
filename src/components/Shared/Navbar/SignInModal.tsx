@@ -13,6 +13,11 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import React from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+type Inputs = {
+  example: string;
+  exampleRequired: string;
+};
 
 interface SignInModalProps {
   open: boolean;
@@ -25,6 +30,13 @@ const SignInModal: React.FC<SignInModalProps> = ({
   onClose,
   onSwitchToSignUp,
 }) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>
@@ -43,61 +55,64 @@ const SignInModal: React.FC<SignInModalProps> = ({
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent>
-        <Box component="form" noValidate autoComplete="off">
-          <TextField
-            margin="dense"
-            label="Email"
-            type="email"
-            fullWidth
-            variant="outlined"
-            required
-          />
-          <TextField
-            margin="dense"
-            label="Password"
-            type="password"
-            fullWidth
-            variant="outlined"
-            required
-          />
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mt={2}
-          >
-            <Box>
-              <input type="checkbox" id="remember" name="remember" />
-              <label htmlFor="remember"> Remember me</label>
-            </Box>
-            <Link href="/forgot-password">
-              <Typography
-                sx={{
-                  color: "#ed5311",
-                  fontWeight: "600",
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                }}
-              >
-                Forgot password?
-              </Typography>
-            </Link>
-          </Stack>
-        </Box>
-      </DialogContent>
-      <DialogActions
-        sx={{
-          display: "flex",
-          paddingLeft: "30px",
-          alignItems: "start",
-          justifyContent: "start",
-        }}
-      >
-        <Button variant="contained" color="primary">
-          Sign In
-        </Button>
-      </DialogActions>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogContent>
+          <Box component="form" noValidate autoComplete="off">
+            <TextField
+              margin="dense"
+              label="Email"
+              type="email"
+              fullWidth
+              variant="outlined"
+              required
+              {...register("example")}
+            />
+            <TextField
+              margin="dense"
+              label="Password"
+              type="password"
+              fullWidth
+              variant="outlined"
+              required
+            />
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              mt={2}
+            >
+              <Box>
+                <input type="checkbox" id="remember" name="remember" />
+                <label htmlFor="remember"> Remember me</label>
+              </Box>
+              <Link href="/forgot-password">
+                <Typography
+                  sx={{
+                    color: "#ed5311",
+                    fontWeight: "600",
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                  }}
+                >
+                  Forgot password?
+                </Typography>
+              </Link>
+            </Stack>
+          </Box>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            display: "flex",
+            paddingLeft: "30px",
+            alignItems: "start",
+            justifyContent: "start",
+          }}
+        >
+          <Button type="submit" variant="contained" color="primary">
+            Sign In
+          </Button>
+        </DialogActions>
+      </form>
       <Box textAlign="center" py={2}>
         <Typography
           sx={{

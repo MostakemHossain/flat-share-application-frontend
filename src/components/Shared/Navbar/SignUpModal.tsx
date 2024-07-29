@@ -1,3 +1,4 @@
+import { userRegistration } from "@/services/actions/userRegistration";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
@@ -12,6 +13,15 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+type IUserRegistration = {
+  fullName: string;
+  userName: string;
+  email: string;
+  password: string;
+};
 
 interface SignUpModalProps {
   open: boolean;
@@ -24,6 +34,36 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
   onClose,
   onSwitchToSignIn,
 }) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<IUserRegistration>();
+  const onSubmit: SubmitHandler<IUserRegistration> = async (data) => {
+    try {
+      const res = await userRegistration(data);
+      if (res?.data?.id) {
+        toast.success(res?.message, {
+          duration: 5000,
+          position: "bottom-right",
+          icon: "✅",
+          style: {
+            background: "#ed5311",
+            color: "white",
+            fontSize: "16px",
+            borderRadius: "20px",
+          },
+        });
+        onClose();
+      } else {
+        toast.error(res?.message);
+      }
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>
@@ -42,62 +82,66 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent>
-        <Box component="form" noValidate autoComplete="off">
-          <TextField
-            margin="dense"
-            label="Full Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            required
-          />
-          <TextField
-            margin="dense"
-            label="Username"
-            type="text"
-            fullWidth
-            variant="outlined"
-            required
-          />
-          <TextField
-            margin="dense"
-            label="Email"
-            type="email"
-            fullWidth
-            variant="outlined"
-            required
-          />
-          <TextField
-            margin="dense"
-            label="Password"
-            type="password"
-            fullWidth
-            variant="outlined"
-            required
-          />
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mt={2}
-          >
-            
-          </Stack>
-        </Box>
-      </DialogContent>
-      <DialogActions
-        sx={{
-          display: "flex",
-          paddingLeft: "30px",
-          alignItems: "start",
-          justifyContent: "start",
-        }}
-      >
-        <Button variant="contained" color="primary">
-          Sign Up
-        </Button>
-      </DialogActions>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogContent>
+          <Box component="form" noValidate autoComplete="off">
+            <TextField
+              margin="dense"
+              label="Full Name"
+              type="text"
+              fullWidth
+              variant="outlined"
+              required
+              {...register("fullName")}
+            />
+            <TextField
+              margin="dense"
+              label="Username"
+              type="text"
+              fullWidth
+              variant="outlined"
+              required
+              {...register("userName")}
+            />
+            <TextField
+              margin="dense"
+              label="Email"
+              type="email"
+              fullWidth
+              variant="outlined"
+              required
+              {...register("email")}
+            />
+            <TextField
+              margin="dense"
+              label="Password"
+              type="password"
+              fullWidth
+              variant="outlined"
+              required
+              {...register("password")}
+            />
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              mt={2}
+            ></Stack>
+          </Box>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            display: "flex",
+            paddingLeft: "30px",
+            alignItems: "start",
+            justifyContent: "start",
+          }}
+        >
+          <Button type="submit" variant="contained" color="primary">
+            Sign Up
+          </Button>
+        </DialogActions>
+      </form>
       <Box textAlign="center" py={2}>
         <Typography
           sx={{
