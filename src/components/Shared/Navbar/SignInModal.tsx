@@ -1,5 +1,5 @@
 import { userLogin } from "@/services/actions/userLogin";
-import { userRegistration } from "@/services/actions/userRegistration";
+import { storeUserInfo } from "@/services/auth.Service";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
@@ -41,7 +41,9 @@ const SignInModal: React.FC<SignInModalProps> = ({
   const onSubmit: SubmitHandler<IUserLogin> = async (data) => {
     try {
       const res = await userLogin(data);
-      console.log(res);
+      if (res?.data?.accessToken) {
+        storeUserInfo({ accessToken: res?.data?.accessToken });
+      }
     } catch (error) {}
   };
   return (
