@@ -1,4 +1,5 @@
-import { getUserInfo, isLoggedIn } from "@/services/auth.Service";
+import { logoutUser } from "@/services/actions/logOut";
+import { getUserInfo } from "@/services/auth.Service";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
@@ -14,6 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { MouseEvent, useState } from "react";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
@@ -24,6 +26,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
@@ -65,7 +68,9 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
   };
 
   const user = getUserInfo();
-  console.log(isLoggedIn());
+  const handleLogout = () => {
+    logoutUser(router);
+  };
 
   return (
     <Container maxWidth={"xl"}>
@@ -141,7 +146,11 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
             spacing={2}
             sx={{ display: { xs: "none", md: "flex" } }}
           >
-            <Button onClick={handleSignInOpen}>Login</Button>
+            {user?.id ? (
+              <Button color="error" onClick={handleLogout}>LogOut</Button>
+            ) : (
+              <Button onClick={handleSignInOpen}>Login</Button>
+            )}
             <Switch checked={darkMode} onChange={toggleDarkMode} />
           </Stack>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
@@ -206,7 +215,11 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
                 </Stack>
               </MenuItem>
               <MenuItem>
-                <Button onClick={handleSignInOpen}>Login</Button>
+                {user?.id ? (
+                  <Button color="error" onClick={handleLogout}>LogOut</Button>
+                ) : (
+                  <Button onClick={handleSignInOpen}>Login</Button>
+                )}
               </MenuItem>
             </Menu>
           </Box>

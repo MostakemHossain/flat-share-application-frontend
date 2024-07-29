@@ -1,4 +1,6 @@
+import { userLogin } from "@/services/actions/userLogin";
 import { userRegistration } from "@/services/actions/userRegistration";
+import { storeUserInfo } from "@/services/auth.Service";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
@@ -12,6 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -40,11 +43,17 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
     watch,
     formState: { errors },
   } = useForm<IUserRegistration>();
+  const router = useRouter();
   const onSubmit: SubmitHandler<IUserRegistration> = async (data) => {
     try {
       const res = await userRegistration(data);
       if (res?.data?.id) {
-        toast.success(res?.message, {
+        const result = await userLogin({
+          email: data.email,
+          password: data.password,
+        });
+        storeUserInfo({ accessToken: result?.data?.accessToken });
+        toast.success(result?.message, {
           duration: 5000,
           position: "bottom-right",
           icon: "✅",
@@ -56,6 +65,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
           },
         });
         onClose();
+        router.push("/");
       } else {
         toast.error(res?.message);
       }

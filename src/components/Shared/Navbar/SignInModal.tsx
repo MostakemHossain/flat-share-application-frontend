@@ -14,8 +14,10 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 export type IUserLogin = {
   email: string;
   password: string;
@@ -38,11 +40,25 @@ const SignInModal: React.FC<SignInModalProps> = ({
     watch,
     formState: { errors },
   } = useForm<IUserLogin>();
+  const router = useRouter();
   const onSubmit: SubmitHandler<IUserLogin> = async (data) => {
     try {
       const res = await userLogin(data);
       if (res?.data?.accessToken) {
         storeUserInfo({ accessToken: res?.data?.accessToken });
+        toast.success(res?.message, {
+          duration: 5000,
+          position: "bottom-right",
+          icon: "✅",
+          style: {
+            background: "#ed5311",
+            color: "white",
+            fontSize: "16px",
+            borderRadius: "20px",
+          },
+        });
+        onClose();
+        router.push("/");
       }
     } catch (error) {}
   };
