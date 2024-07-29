@@ -1,3 +1,5 @@
+import { userLogin } from "@/services/actions/userLogin";
+import { userRegistration } from "@/services/actions/userRegistration";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
@@ -14,9 +16,9 @@ import {
 import Link from "next/link";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-type Inputs = {
-  example: string;
-  exampleRequired: string;
+export type IUserLogin = {
+  email: string;
+  password: string;
 };
 
 interface SignInModalProps {
@@ -35,8 +37,13 @@ const SignInModal: React.FC<SignInModalProps> = ({
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  } = useForm<IUserLogin>();
+  const onSubmit: SubmitHandler<IUserLogin> = async (data) => {
+    try {
+      const res = await userLogin(data);
+      console.log(res);
+    } catch (error) {}
+  };
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>
@@ -65,7 +72,7 @@ const SignInModal: React.FC<SignInModalProps> = ({
               fullWidth
               variant="outlined"
               required
-              {...register("example")}
+              {...register("email")}
             />
             <TextField
               margin="dense"
@@ -74,6 +81,7 @@ const SignInModal: React.FC<SignInModalProps> = ({
               fullWidth
               variant="outlined"
               required
+              {...register("password")}
             />
             <Stack
               direction="row"
