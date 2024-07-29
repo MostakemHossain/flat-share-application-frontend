@@ -1,3 +1,4 @@
+import { getUserInfo, isLoggedIn } from "@/services/auth.Service";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
@@ -62,6 +63,9 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
     setIsSignUpOpen(false);
     setIsSignInOpen(true);
   };
+
+  const user = getUserInfo();
+  console.log(isLoggedIn());
 
   return (
     <Container maxWidth={"xl"}>
