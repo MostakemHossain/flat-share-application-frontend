@@ -1,3 +1,5 @@
+import FlatMatchForm from "@/components/Forms/FlatMatchForm";
+import FlatMatchInput from "@/components/Forms/FlatMatchInput";
 import { userLogin } from "@/services/actions/userLogin";
 import { storeUserInfo } from "@/services/auth.Service";
 import CloseIcon from "@mui/icons-material/Close";
@@ -10,14 +12,14 @@ import {
   DialogTitle,
   IconButton,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
+
 export type IUserLogin = {
   email: string;
   password: string;
@@ -34,14 +36,8 @@ const SignInModal: React.FC<SignInModalProps> = ({
   onClose,
   onSwitchToSignUp,
 }) => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<IUserLogin>();
   const router = useRouter();
-  const onSubmit: SubmitHandler<IUserLogin> = async (data) => {
+  const handleLogin = async (data: FieldValues) => {
     try {
       const res = await userLogin(data);
       if (res?.data?.accessToken) {
@@ -80,26 +76,21 @@ const SignInModal: React.FC<SignInModalProps> = ({
           </IconButton>
         </Box>
       </DialogTitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <FlatMatchForm onSubmit={handleLogin}>
         <DialogContent>
-          <Box component="form" noValidate autoComplete="off">
-            <TextField
-              margin="dense"
+          <Box>
+            <FlatMatchInput
+              name="email"
               label="Email"
               type="email"
               fullWidth
-              variant="outlined"
-              required
-              {...register("email")}
+              sx={{ mb: 2 }}
             />
-            <TextField
-              margin="dense"
+            <FlatMatchInput
               label="Password"
               type="password"
               fullWidth
-              variant="outlined"
-              required
-              {...register("password")}
+              name="password"
             />
             <Stack
               direction="row"
@@ -138,7 +129,7 @@ const SignInModal: React.FC<SignInModalProps> = ({
             Sign In
           </Button>
         </DialogActions>
-      </form>
+      </FlatMatchForm>
       <Box textAlign="center" py={2}>
         <Typography
           sx={{

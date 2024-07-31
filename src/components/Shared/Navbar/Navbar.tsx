@@ -147,7 +147,9 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
             sx={{ display: { xs: "none", md: "flex" } }}
           >
             {user?.id ? (
-              <Button color="error" onClick={handleLogout}>LogOut</Button>
+              <Button color="error" onClick={handleLogout}>
+                LogOut
+              </Button>
             ) : (
               <Button onClick={handleSignInOpen}>Login</Button>
             )}
@@ -216,7 +218,9 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
               </MenuItem>
               <MenuItem>
                 {user?.id ? (
-                  <Button color="error" onClick={handleLogout}>LogOut</Button>
+                  <Button color="error" onClick={handleLogout}>
+                    LogOut
+                  </Button>
                 ) : (
                   <Button onClick={handleSignInOpen}>Login</Button>
                 )}
