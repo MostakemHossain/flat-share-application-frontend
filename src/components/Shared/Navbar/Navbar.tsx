@@ -9,7 +9,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Skeleton,
   Stack,
   Switch,
   Toolbar,
@@ -17,7 +16,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { MouseEvent, useEffect, useState } from "react";
+import React, { MouseEvent, useState } from "react";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
 
@@ -26,20 +25,11 @@ interface NavbarProps {
   darkMode: boolean;
 }
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  // Add other user properties if needed
-}
-
 const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
 
   const handleMenuOpen = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -77,29 +67,10 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
     setIsSignInOpen(true);
   };
 
+  const user = getUserInfo();
   const handleLogout = () => {
     logoutUser(router);
   };
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const userInfo = await getUserInfo();
-      setUser(userInfo);
-      setLoading(false);
-    };
-
-    fetchUser();
-  }, []);
-
-  if (loading) {
-    return (
-      <Box>
-        <Skeleton />
-        <Skeleton animation="wave" />
-        <Skeleton animation={false} />
-      </Box>
-    );
-  }
 
   return (
     <Container maxWidth={"xl"}>
@@ -175,10 +146,8 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
             spacing={2}
             sx={{ display: { xs: "none", md: "flex" } }}
           >
-            {user ? (
-              <Button color="error" onClick={handleLogout}>
-                LogOut
-              </Button>
+            {user?.id ? (
+              <Button color="error" onClick={handleLogout}>LogOut</Button>
             ) : (
               <Button onClick={handleSignInOpen}>Login</Button>
             )}
@@ -246,10 +215,8 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
                 </Stack>
               </MenuItem>
               <MenuItem>
-                {user ? (
-                  <Button color="error" onClick={handleLogout}>
-                    LogOut
-                  </Button>
+                {user?.id ? (
+                  <Button color="error" onClick={handleLogout}>LogOut</Button>
                 ) : (
                   <Button onClick={handleSignInOpen}>Login</Button>
                 )}
