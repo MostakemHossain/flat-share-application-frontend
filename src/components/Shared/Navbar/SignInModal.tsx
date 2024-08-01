@@ -2,6 +2,7 @@ import FlatMatchForm from "@/components/Forms/FlatMatchForm";
 import FlatMatchInput from "@/components/Forms/FlatMatchInput";
 import { userLogin } from "@/services/actions/userLogin";
 import { storeUserInfo } from "@/services/auth.Service";
+import { zodResolver } from "@hookform/resolvers/zod";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
@@ -19,7 +20,21 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
-
+import { z } from "zod";
+export const loginValidationSchema = z.object({
+  email: z
+    .string({
+      required_error: "Email is required",
+    })
+    .email({
+      message: "Enter valid Email",
+    }),
+  password: z
+    .string({
+      message: "Password is required",
+    })
+    .min(1),
+});
 export type IUserLogin = {
   email: string;
   password: string;
@@ -40,6 +55,7 @@ const SignInModal: React.FC<SignInModalProps> = ({
   const handleLogin = async (data: FieldValues) => {
     try {
       const res = await userLogin(data);
+
       if (res?.data?.accessToken) {
         storeUserInfo({ accessToken: res?.data?.accessToken });
         toast.success(res?.message, {
@@ -55,8 +71,23 @@ const SignInModal: React.FC<SignInModalProps> = ({
         });
         onClose();
         router.push("/");
+      } else {
+        throw new Error(res?.message || "Login failed");
       }
-    } catch (error) {}
+    } catch (error: any) {
+     
+      toast.error(error.message || "An error occurred during login", {
+        duration: 5000,
+        position: "bottom-right",
+        icon: "❌",
+        style: {
+          background: "#ff4d4d",
+          color: "white",
+          fontSize: "16px",
+          borderRadius: "20px",
+        },
+      });
+    }
   };
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -76,7 +107,10 @@ const SignInModal: React.FC<SignInModalProps> = ({
           </IconButton>
         </Box>
       </DialogTitle>
-      <FlatMatchForm onSubmit={handleLogin}>
+      <FlatMatchForm
+        onSubmit={handleLogin}
+        resolver={zodResolver(loginValidationSchema)}
+      >
         <DialogContent>
           <Box>
             <FlatMatchInput

@@ -1,6 +1,9 @@
+import FlatMatchForm from "@/components/Forms/FlatMatchForm";
+import FlatMatchInput from "@/components/Forms/FlatMatchInput";
 import { userLogin } from "@/services/actions/userLogin";
 import { userRegistration } from "@/services/actions/userRegistration";
 import { storeUserInfo } from "@/services/auth.Service";
+import { zodResolver } from "@hookform/resolvers/zod";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
@@ -11,13 +14,45 @@ import {
   DialogTitle,
   IconButton,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+export const registrationValidationSchema = z.object({
+  fullName: z.string({
+    required_error: "Full Name is required",
+  }),
+  userName: z.string({
+    required_error: "User Name is required",
+  }),
+  email: z
+    .string({
+      required_error: "Email is required",
+    })
+    .email({
+      message: "Enter a valid Email",
+    }),
+  password: z
+    .string({
+      required_error: "Password is required",
+    })
+    .min(6, {
+      message: "Password must be at least 6 characters long",
+    })
+    .regex(/[a-z]/, {
+      message: "Password must contain at least one lowercase letter",
+    })
+    .regex(/[A-Z]/, {
+      message: "Password must contain at least one uppercase letter",
+    })
+    .regex(/[^a-zA-Z0-9]/, {
+      message: "Password must contain at least one symbol",
+    }),
+});
 
 type IUserRegistration = {
   fullName: string;
@@ -44,7 +79,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
     formState: { errors },
   } = useForm<IUserRegistration>();
   const router = useRouter();
-  const onSubmit: SubmitHandler<IUserRegistration> = async (data) => {
+  const handleRegistration = async (data: FieldValues) => {
     try {
       const res = await userRegistration(data);
       if (res?.data?.id) {
@@ -67,10 +102,30 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
         onClose();
         router.push("/");
       } else {
-        toast.error(res?.message);
+        toast.error(res?.message || "An error occurred during Registration", {
+          duration: 5000,
+          position: "bottom-right",
+          icon: "❌",
+          style: {
+            background: "#ff4d4d",
+            color: "white",
+            fontSize: "16px",
+            borderRadius: "20px",
+          },
+        });
       }
     } catch (error: any) {
-      console.log(error.message);
+      toast.error(error.message || "An error occurred during Registration", {
+        duration: 5000,
+        position: "bottom-right",
+        icon: "❌",
+        style: {
+          background: "#ff4d4d",
+          color: "white",
+          fontSize: "16px",
+          borderRadius: "20px",
+        },
+      });
     }
   };
 
@@ -92,44 +147,47 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
           </IconButton>
         </Box>
       </DialogTitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <FlatMatchForm
+        onSubmit={handleRegistration}
+        resolver={zodResolver(registrationValidationSchema)}
+      >
         <DialogContent>
-          <Box component="form" noValidate autoComplete="off">
-            <TextField
-              margin="dense"
-              label="Full Name"
+          <Box>
+            <FlatMatchInput
+              label="FullName"
               type="text"
               fullWidth
-              variant="outlined"
-              required
-              {...register("fullName")}
+              name="fullName"
+              sx={{
+                mb: 2,
+              }}
             />
-            <TextField
-              margin="dense"
+            <FlatMatchInput
               label="Username"
               type="text"
               fullWidth
-              variant="outlined"
-              required
-              {...register("userName")}
+              name="userName"
+              sx={{
+                mb: 2,
+              }}
             />
-            <TextField
-              margin="dense"
+            <FlatMatchInput
               label="Email"
               type="email"
               fullWidth
-              variant="outlined"
-              required
-              {...register("email")}
+              name="email"
+              sx={{
+                mb: 2,
+              }}
             />
-            <TextField
-              margin="dense"
+            <FlatMatchInput
               label="Password"
               type="password"
               fullWidth
-              variant="outlined"
-              required
-              {...register("password")}
+              name="password"
+              sx={{
+                mb: 2,
+              }}
             />
             <Stack
               direction="row"
@@ -151,7 +209,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
             Sign Up
           </Button>
         </DialogActions>
-      </form>
+      </FlatMatchForm>
       <Box textAlign="center" py={2}>
         <Typography
           sx={{

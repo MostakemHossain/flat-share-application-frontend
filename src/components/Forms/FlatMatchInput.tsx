@@ -7,6 +7,8 @@ type TInputProps = {
   size?: "small" | "medium";
   fullWidth?: boolean;
   sx?: SxProps;
+  placeholder?: string;
+  required?: boolean;
 };
 
 const FlatMatchInput = ({
@@ -16,13 +18,15 @@ const FlatMatchInput = ({
   fullWidth,
   size,
   sx,
+  placeholder,
+  required,
 }: TInputProps) => {
   const { control } = useFormContext();
   return (
     <Controller
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState: { error } }) => (
         <TextField
           {...field}
           label={label}
@@ -30,7 +34,11 @@ const FlatMatchInput = ({
           fullWidth={fullWidth}
           variant="outlined"
           size={size}
-          sx={sx}
+          sx={{ ...sx }}
+          placeholder={label}
+          required={required}
+          error={!!error?.message}
+          helperText={error?.message}
         />
       )}
     />
