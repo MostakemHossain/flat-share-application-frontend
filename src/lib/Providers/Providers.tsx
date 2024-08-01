@@ -1,8 +1,10 @@
 "use client";
+import { store } from "@/redux/store";
 import { ThemeProvider } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import React, { useEffect } from "react";
+import { Provider } from "react-redux";
 import { theme } from "../theme/theme";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
@@ -14,7 +16,11 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     AOS.refresh();
   }, []);
 
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+  return (
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+    </Provider>
+  );
 };
 
 export default Providers;
