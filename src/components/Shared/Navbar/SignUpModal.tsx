@@ -36,11 +36,9 @@ export const registrationValidationSchema = z.object({
     .email({
       message: "Enter a valid Email",
     }),
-  password: z
-    .string({
-      required_error: "Password is required",
-    })
-    
+  password: z.string({
+    required_error: "Password is required",
+  }),
 });
 
 type IUserRegistration = {
@@ -89,7 +87,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({
           },
         });
         onClose();
-        router.push("/");
+        router.push("/dashboard");
       } else {
         toast.error(res?.message || "An error occurred during Registration", {
           duration: 5000,

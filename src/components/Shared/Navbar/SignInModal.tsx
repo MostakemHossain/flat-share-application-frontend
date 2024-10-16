@@ -70,12 +70,11 @@ const SignInModal: React.FC<SignInModalProps> = ({
           },
         });
         onClose();
-        router.push("/");
+        router.push("/dashboard");
       } else {
         throw new Error(res?.message || "Login failed");
       }
     } catch (error: any) {
-     
       toast.error(error.message || "An error occurred during login", {
         duration: 5000,
         position: "bottom-right",
