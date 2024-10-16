@@ -31,7 +31,6 @@ const FlatMatchForm = ({
   const { handleSubmit, reset } = methods;
   const submit: SubmitHandler<FieldValues> = (data) => {
     onSubmit(data);
-    reset();
   };
   return (
     <FormProvider {...methods}>
