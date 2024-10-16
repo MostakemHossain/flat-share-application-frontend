@@ -1,4 +1,5 @@
 "use client";
+import FlatMatchFileUploader from "@/components/Forms/FlatMatchFileUpload";
 import FlatMatchForm from "@/components/Forms/FlatMatchForm";
 import FlatMatchInput from "@/components/Forms/FlatMatchInput";
 import FlatMatchModal from "@/components/Shared/FlatMatchModal.ts/FlatMatchModal";
@@ -20,7 +21,7 @@ const CreateFlatModal = ({ open, setOpen }: TProps) => {
             <FlatMatchInput name="Square Feet" label="Square Feet" />
           </Grid>
           <Grid item md={6}>
-            <FlatMatchInput name="totalRooms" label="Total Rooms" />
+            <FlatMatchFileUploader name="file" label="Upload File"/>
           </Grid>
         </Grid>
         <Button sx={{
