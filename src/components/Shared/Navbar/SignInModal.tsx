@@ -4,9 +4,11 @@ import { userLogin } from "@/services/actions/userLogin";
 import { storeUserInfo } from "@/services/auth.Service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CloseIcon from "@mui/icons-material/Close";
+import GoogleIcon from "@mui/icons-material/Google";
 import {
   Box,
   Button,
+  CircularProgress, 
   Dialog,
   DialogActions,
   DialogContent,
@@ -17,10 +19,11 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react"; // Import useState
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
 export const loginValidationSchema = z.object({
   email: z
     .string({
@@ -35,6 +38,7 @@ export const loginValidationSchema = z.object({
     })
     .min(1),
 });
+
 export type IUserLogin = {
   email: string;
   password: string;
@@ -52,7 +56,10 @@ const SignInModal: React.FC<SignInModalProps> = ({
   onSwitchToSignUp,
 }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false); 
+
   const handleLogin = async (data: FieldValues) => {
+    setLoading(true); 
     try {
       const res = await userLogin(data);
 
@@ -86,8 +93,24 @@ const SignInModal: React.FC<SignInModalProps> = ({
           borderRadius: "20px",
         },
       });
+    } finally {
+      setLoading(false); 
     }
   };
+
+  const handleDemoLogin = async (role: string) => {
+    const demoCredentials = {
+      email: role === "admin" ? "admin101@gmail.com" : "user00@gmail.com",
+      password: role === "admin" ? "admin12345" : "user12345",
+    };
+    await handleLogin(demoCredentials);
+  };
+
+  const handleGoogleLogin = () => {
+    
+    toast.info("Google login not implemented yet");
+  };
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>
@@ -153,13 +176,59 @@ const SignInModal: React.FC<SignInModalProps> = ({
         <DialogActions
           sx={{
             display: "flex",
+            flexDirection: "column",
+            gap: 2,
             paddingLeft: "30px",
-            alignItems: "start",
-            justifyContent: "start",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
           }}
         >
-          <Button type="submit" variant="contained" color="primary">
-            Sign In
+        
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            disabled={loading} 
+            startIcon={loading ? <CircularProgress size={20} /> : null} 
+          >
+            {loading ? "Signing In..." : "Sign In"}
+          </Button>
+
+       
+          <Stack direction="row" spacing={2} width="100%">
+            <Button
+              variant="outlined"
+              color="primary" 
+              fullWidth
+              
+              disabled={loading} 
+              onClick={() => handleDemoLogin("user")}
+            >
+              Demo User
+            </Button>
+            <Button
+              variant="outlined"
+              color="error" 
+              fullWidth
+              disabled={loading} 
+              onClick={() => handleDemoLogin("admin")}
+            >
+              Demo Admin
+            </Button>
+          </Stack>
+
+          
+          <Button
+            variant="outlined"
+            color="secondary"
+            fullWidth
+            startIcon={<GoogleIcon />} 
+            onClick={handleGoogleLogin}
+            disabled={loading} 
+          >
+            Sign in with Google
           </Button>
         </DialogActions>
       </FlatMatchForm>
