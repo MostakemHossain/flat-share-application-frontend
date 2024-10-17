@@ -31,7 +31,9 @@ export default function FlatMatchFileUploader({ name, label, sx }: TProps) {
               {...field}
               type={name}
               value={value?.fileName}
-              onChange={(e) => onChange((e?.target as HTMLInputElement).files?.[0])}
+              onChange={(e) =>
+                onChange((e?.target as HTMLInputElement).files?.[0])
+              }
               style={{
                 display: "none",
               }}
