@@ -1,3 +1,4 @@
+// HotFlatCard.tsx
 import { Bathtub, Bed, LocationOn, SquareFoot } from "@mui/icons-material";
 import {
   Box,
@@ -8,9 +9,27 @@ import {
   Typography,
 } from "@mui/material";
 
-const HotFlatCard = () => {
+export interface Flat {
+  id: string;
+  squareFeet: number;
+  userId: string;
+  totalBedrooms: number;
+  totalRooms: number;
+  utilitiesDescription: string;
+  location: string;
+  description: string;
+  photos: string[];
+  rent: number;
+  parking: boolean;
+  availability: boolean;
+  advanceAmount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const HotFlatCard = ({ flat }: { flat: Flat }) => {
   return (
-    <Card sx={{ maxWidth: 380, borderRadius: 2, boxShadow: 3 }}>
+    <Card sx={{ width: "100%", maxWidth: 380, borderRadius: 2, boxShadow: 3 }}>
       <Box sx={{ position: "relative", overflow: "hidden" }}>
         <Box
           sx={{
@@ -30,7 +49,7 @@ const HotFlatCard = () => {
         <CardMedia
           component="img"
           height="200"
-          image="https://shreethemes.net/resido-live/resido/assets/img/c-2.png"
+          image={flat.photos[0]} // Use the first photo from the flat's data
           alt="Property"
           sx={{
             transition: "transform 0.3s ease-in-out",
@@ -54,7 +73,7 @@ const HotFlatCard = () => {
           }}
           color="textSecondary"
         >
-          Sale
+          Rent
         </Typography>
         <Box
           sx={{
@@ -64,25 +83,25 @@ const HotFlatCard = () => {
           }}
         >
           <Typography variant="h5" component="div" sx={{ fontWeight: "bold" }}>
-            Bluebell Real Estate
+            {flat.location}
           </Typography>
           <Typography
             variant="h5"
             color="primary"
             sx={{ fontWeight: "bold", marginTop: 1, marginLeft: 1 }}
           >
-            $4,600
+            ${flat.rent}
           </Typography>
         </Box>
         <Box display="flex" alignItems="flex-end" mt={1}>
           <Bed sx={{ marginRight: 1, color: "slategray" }} />
-          <Typography variant="body2">3 Beds</Typography>
+          <Typography variant="body2">{flat.totalBedrooms} Beds</Typography>
           <Bathtub sx={{ marginRight: 1, marginLeft: 2, color: "slategray" }} />
-          <Typography variant="body2">3 Baths</Typography>
+          <Typography variant="body2">{flat.totalRooms} Baths</Typography>
           <SquareFoot
             sx={{ marginRight: 1, marginLeft: 2, color: "slategray" }}
           />
-          <Typography variant="body2">1200 sqft</Typography>
+          <Typography variant="body2">{flat.squareFeet} sqft</Typography>
         </Box>
         <Box
           display="flex"
@@ -102,7 +121,7 @@ const HotFlatCard = () => {
                 marginTop: "10px",
               }}
             >
-              778 Panama City, FL
+              {flat.location}
             </Typography>
           </Box>
           <Button

@@ -1,11 +1,38 @@
-import { Box, Container, Grid, Typography } from "@mui/material";
-import HotFlatCard from "./HotFlatCard";
+"use client";
+import { useGetAllFlatQuery } from "@/redux/api/flat";
+import { useDebounced } from "@/redux/hooks";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
+import FeatureFlatCard from "../FeatureFlat/FeatureFlatCard";
 
 const HotFlat = () => {
-  const flats = [1, 2, 3];
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedTerm = useDebounced({
+    searchQuery: searchTerm,
+    delay: 600,
+  });
+
+  const query: Record<string, any> = {};
+  if (debouncedTerm) {
+    query["searchTerm"] = debouncedTerm;
+  }
+
+  const { data, isLoading } = useGetAllFlatQuery({ ...query });
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
   return (
-    <Container maxWidth="xl">
+    <Container>
       <Typography
         variant="h3"
         sx={{
@@ -35,18 +62,44 @@ const HotFlat = () => {
         listing provides detailed information to help you find the perfect home
         for you and your family. Enjoy browsing through our top picks!
       </Typography>
+
       <Box
         sx={{
-          marginTop: "50px",
+          marginTop: "30px",
+          display: "flex",
+          justifyContent: "center",
         }}
       >
+        <TextField
+          variant="outlined"
+          size="small"
+          placeholder="Search Flats"
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{ maxWidth: "400px", width: "100%" }}
+        />
+      </Box>
+
+      <Box sx={{ marginTop: "50px" }}>
         <Grid container spacing={2} justifyContent="center">
-          {flats.map((flat, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <HotFlatCard />
-            </Grid>
-          ))}
+          {data?.data &&
+            data?.data?.slice(0, 3).map((flat: any, index: any) => (
+              <Grid item xs={12} sm={6} md={4} lg={4} key={index}>
+                {" "}
+                <FeatureFlatCard flat={flat} />
+              </Grid>
+            ))}
         </Grid>
+        <Box mt={4} textAlign="center">
+          <Button
+            color="primary"
+            sx={{
+              borderRadius: 2,
+              textTransform: "none",
+            }}
+          >
+            See More
+          </Button>
+        </Box>
       </Box>
     </Container>
   );

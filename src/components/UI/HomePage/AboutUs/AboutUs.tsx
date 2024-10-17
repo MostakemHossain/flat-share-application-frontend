@@ -9,7 +9,6 @@ import {
   CardContent,
   Container,
   Grid,
-  Icon,
   Typography,
 } from "@mui/material";
 
@@ -47,7 +46,10 @@ const AboutSection = () => {
         backgroundColor: "#ed5311",
         py: { xs: 10, lg: 20 },
         mt: { xs: 10, lg: 20 },
+        mr: { xs: 0, lg: 10 },
+        ml: { xs: 0, lg: 10 },
       }}
+    
     >
       <Container>
         <Grid container spacing={4} alignItems="center">

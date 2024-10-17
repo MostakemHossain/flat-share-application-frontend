@@ -10,7 +10,6 @@ const HomePage = () => {
   return (
     <>
       <HeroSection />
-      <SearchBox />
       <HotFlat />
       <AboutSection />
       <FeatureFlatSection/>

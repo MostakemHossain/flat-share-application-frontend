@@ -1,12 +1,38 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+"use client";
+import { useGetAllFlatQuery } from "@/redux/api/flat";
+import { useDebounced } from "@/redux/hooks";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Grid,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
 import FeatureFlatCard from "./FeatureFlatCard";
 
 const FeatureFlatSection = () => {
-  const flats = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedTerm = useDebounced({
+    searchQuery: searchTerm,
+    delay: 600,
+  });
+
+  const query: Record<string, any> = {};
+  if (debouncedTerm) {
+    query["searchTerm"] = debouncedTerm;
+  }
+
+  const { data, isLoading } = useGetAllFlatQuery({ ...query });
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
   return (
     <Box sx={{ py: 8 }}>
-      <Container maxWidth="xl">
+      <Container>
         <Typography variant="h3" fontWeight={600} align="center" gutterBottom>
           Explore Our Featured Flats
         </Typography>
@@ -20,17 +46,16 @@ const FeatureFlatSection = () => {
           Find your perfect flat from our curated selection of premium
           properties.
         </Typography>
-        <Box
-          sx={{
-            marginTop: "50px",
-          }}
-        >
+        <Box sx={{ marginTop: "50px" }}>
           <Grid container spacing={2} justifyContent="center">
-            {flats.map((flat, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <FeatureFlatCard />
-              </Grid>
-            ))}
+            {data?.data &&
+              data?.data?.slice(2, 8).map((flat: any, index: any) => (
+                <Grid item xs={12} sm={6} md={4} lg={4} key={index}>
+                  {" "}
+                 
+                  <FeatureFlatCard flat={flat} />
+                </Grid>
+              ))}
           </Grid>
           <Box mt={4} textAlign="center">
             <Button
