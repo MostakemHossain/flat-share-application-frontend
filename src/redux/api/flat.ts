@@ -1,3 +1,4 @@
+import { tagTypes } from "../tag-types";
 import { baseApi } from "./baseApi";
 
 const flatApi = baseApi.injectEndpoints({
@@ -9,8 +10,16 @@ const flatApi = baseApi.injectEndpoints({
         contentType: "multipart/form-data",
         data,
       }),
+      invalidatesTags: [tagTypes.flats],
+    }),
+    getAllFlat: build.query({
+      query: () => ({
+        url: "/flats",
+        method: "GET",
+      }),
+      providesTags: [tagTypes.flats],
     }),
   }),
 });
 
-export const { useCreateFlatMutation } = flatApi;
+export const { useCreateFlatMutation, useGetAllFlatQuery } = flatApi;
