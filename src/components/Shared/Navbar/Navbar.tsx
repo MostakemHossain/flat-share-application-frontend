@@ -108,14 +108,17 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
                 Home
               </Typography>
             </Link>
-            <Link href={"/dashboard"}>
-              <Typography
-                variant="h6"
-                sx={{ mx: 2, fontWeight: 600, "&:hover": { color: "#ed5311" } }}
-              >
-                Dashboard
-              </Typography>
-            </Link>
+            {/* Show Dashboard link only if user is logged in */}
+            {user?.id && (
+              <Link href={"/dashboard"}>
+                <Typography
+                  variant="h6"
+                  sx={{ mx: 2, fontWeight: 600, "&:hover": { color: "#ed5311" } }}
+                >
+                  Dashboard
+                </Typography>
+              </Link>
+            )}
             <Link href={"/about"}>
               <Typography
                 variant="h6"
@@ -187,12 +190,15 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
               >
                 <Link href={"/"}>Home</Link>
               </MenuItem>
-              <MenuItem
-                sx={{ fontWeight: 600, "&:hover": { color: "#ed5311" } }}
-                onClick={handleMenuClose}
-              >
-                <Link href={"/dashboard"}>Dashboard</Link>
-              </MenuItem>
+              {/* Show Dashboard link only if user is logged in */}
+              {user?.id && (
+                <MenuItem
+                  sx={{ fontWeight: 600, "&:hover": { color: "#ed5311" } }}
+                  onClick={handleMenuClose}
+                >
+                  <Link href={"/dashboard"}>Dashboard</Link>
+                </MenuItem>
+              )}
               <MenuItem
                 sx={{ fontWeight: 600, "&:hover": { color: "#ed5311" } }}
                 onClick={handleMenuClose}
