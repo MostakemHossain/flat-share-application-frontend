@@ -40,7 +40,6 @@ const CreateFlatModal = ({ open, setOpen }: TProps) => {
         toast.success("Create A New Flat Successfully");
         setOpen(false);
       }
-      
     } catch (error: any) {
       console.error(error.message);
     } finally {

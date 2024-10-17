@@ -1,5 +1,5 @@
 "use client";
-import { useGetAllFlatQuery } from "@/redux/api/flat";
+import { useDeleteFlatMutation, useGetAllFlatQuery } from "@/redux/api/flat";
 import {
   Box,
   Button,
@@ -11,11 +11,16 @@ import {
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { toast } from "sonner";
 import CreateFlatModal from "./CreateFlatModal";
+import ConfirmDeleteModal from "./FlatDelete";
 
 const CreateFlat = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = React.useState(false);
+  const [flatToDelete, setFlatToDelete] = React.useState<string | null>(null);
   const { data, isLoading } = useGetAllFlatQuery("");
+  const [deleteFlat] = useDeleteFlatMutation();
 
   if (isLoading) {
     return <Skeleton />;
@@ -23,15 +28,26 @@ const CreateFlat = () => {
 
   const handleEdit = (id: string) => {
     console.log("Edit flat with ID:", id);
-    // Implement edit logic here
   };
 
-  const handleDelete = (id: string) => {
-    console.log("Delete flat with ID:", id);
-    // Implement delete logic here
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await deleteFlat(id).unwrap();
+      if (res.id) {
+        toast.success("Flat deleted Successfully");
+      }
+    } catch (error: any) {
+      console.error(error.message);
+    } finally {
+      setIsConfirmDeleteOpen(false);
+    }
   };
 
-  // Define the columns for the DataGrid
+  const handleOpenConfirmDelete = (id: string) => {
+    setFlatToDelete(id);
+    setIsConfirmDeleteOpen(true);
+  };
+
   const columns: GridColDef[] = [
     {
       field: "photos",
@@ -61,6 +77,16 @@ const CreateFlat = () => {
     { field: "rent", headerName: "Rent", width: 150 },
     { field: "description", headerName: "Description", width: 250 },
     {
+      field: "availability",
+      headerName: "Availability",
+      width: 120,
+      renderCell: (params) => (
+        <Typography sx={{ mt: 3, color: params.value ? "green" : "red" }}>
+          {params.value ? "Available" : "Not Available"}
+        </Typography>
+      ),
+    },
+    {
       field: "actions",
       headerName: "Actions",
       width: 180,
@@ -80,7 +106,7 @@ const CreateFlat = () => {
             <Button
               variant="outlined"
               color="error"
-              onClick={() => handleDelete(params.id as string)}
+              onClick={() => handleOpenConfirmDelete(params.id as string)}
               startIcon={<FaTrash />}
             ></Button>
           </Stack>
@@ -100,10 +126,11 @@ const CreateFlat = () => {
     advanceAmount: flat.advanceAmount,
     rent: flat.rent,
     description: flat.description,
+    availability: flat.availability,
   }));
 
   return (
-    <Box sx={{  width: "100%" }}>
+    <Box sx={{ width: "100%" }}>
       <Stack
         direction={"row"}
         justifyContent={"space-between"}
@@ -117,12 +144,27 @@ const CreateFlat = () => {
         <TextField size="small" placeholder="Search Flats" />
       </Stack>
 
+      <Box
+        sx={{
+          marginTop: "30px",
+          marginBottom: "20px",
+        }}
+      >
+        <Typography variant="h4">All Flats ({rows.length})</Typography>
+      </Box>
       <DataGrid
         rows={rows}
         columns={columns}
         pageSizeOptions={[5, 10, 20]}
         autoHeight
         rowHeight={80}
+      />
+
+      <ConfirmDeleteModal
+        open={isConfirmDeleteOpen}
+        onClose={() => setIsConfirmDeleteOpen(false)}
+        onConfirm={handleDelete}
+        flatId={flatToDelete}
       />
     </Box>
   );
