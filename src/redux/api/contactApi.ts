@@ -11,7 +11,13 @@ const contactApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.contacts],
     }),
+    getContact: build.query({
+      query: () => ({
+        url: `/contact`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useCreateContactMutation } = contactApi;
+export const { useCreateContactMutation,useGetContactQuery } = contactApi;
