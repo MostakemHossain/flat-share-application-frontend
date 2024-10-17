@@ -1,5 +1,6 @@
 "use client";
 import { useDeleteFlatMutation, useGetAllFlatQuery } from "@/redux/api/flat";
+import { useDebounced } from "@/redux/hooks";
 import {
   Box,
   Button,
@@ -9,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import React from "react";
+import React, { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "sonner";
 import CreateFlatModal from "./CreateFlatModal";
@@ -19,7 +20,19 @@ const CreateFlat = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = React.useState(false);
   const [flatToDelete, setFlatToDelete] = React.useState<string | null>(null);
-  const { data, isLoading } = useGetAllFlatQuery("");
+  const query: Record<string, any> = {};
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const debouncedTerm = useDebounced({
+    searchQuery: searchTerm,
+    delay: 600,
+  });
+
+  if (!!debouncedTerm) {
+    query["searchTerm"] = searchTerm;
+  }
+
+  const { data, isLoading } = useGetAllFlatQuery({ ...query });
   const [deleteFlat] = useDeleteFlatMutation();
 
   if (isLoading) {
@@ -115,7 +128,7 @@ const CreateFlat = () => {
     },
   ];
 
-  const rows = data.data.map((flat: any) => ({
+  const rows = data?.data?.map((flat: any) => ({
     id: flat.id,
     photos: flat.photos,
     totalBedrooms: flat.totalBedrooms,
@@ -141,7 +154,11 @@ const CreateFlat = () => {
           Create A New Flat
         </Button>
         <CreateFlatModal open={isModalOpen} setOpen={setIsModalOpen} />
-        <TextField size="small" placeholder="Search Flats" />
+        <TextField
+          onChange={(e) => setSearchTerm(e.target.value)}
+          size="small"
+          placeholder="Search Flats"
+        />
       </Stack>
 
       <Box
@@ -150,7 +167,7 @@ const CreateFlat = () => {
           marginBottom: "20px",
         }}
       >
-        <Typography variant="h4">All Flats ({rows.length})</Typography>
+        <Typography variant="h4">All Flats ({rows?.length || 0})</Typography>
       </Box>
       <DataGrid
         rows={rows}

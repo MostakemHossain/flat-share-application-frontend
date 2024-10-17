@@ -13,20 +13,25 @@ const flatApi = baseApi.injectEndpoints({
       invalidatesTags: [tagTypes.flats],
     }),
     getAllFlat: build.query({
-      query: () => ({
+      query: (arg: Record<string, any>) => ({
         url: "/flats",
         method: "GET",
+        params: arg,
       }),
       providesTags: [tagTypes.flats],
     }),
     deleteFlat: build.mutation({
-        query: (id) => ({
-          url: `/flats/${id}`,
-          method: "DELETE",
-        }),
-        invalidatesTags: [tagTypes.flats],
+      query: (id) => ({
+        url: `/flats/${id}`,
+        method: "DELETE",
       }),
+      invalidatesTags: [tagTypes.flats],
+    }),
   }),
 });
 
-export const { useCreateFlatMutation, useGetAllFlatQuery,useDeleteFlatMutation } = flatApi;
+export const {
+  useCreateFlatMutation,
+  useGetAllFlatQuery,
+  useDeleteFlatMutation,
+} = flatApi;
