@@ -102,7 +102,7 @@ const FeatureFlatCard = ({ flat }: { flat: Flat }) => {
               },
             }}
           >
-            BOOK NOW
+            VIEW DETAILS
           </Button>
         </Box>
       </CardContent>

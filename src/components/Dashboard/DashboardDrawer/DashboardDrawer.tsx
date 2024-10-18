@@ -1,5 +1,9 @@
 "use client";
+
+import AccountMenu from "@/components/AccountMenu/AccountMenu";
+import { useGetSingleUserQuery } from "@/redux/api/userApi";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Avatar, LinearProgress, Stack } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,7 +16,7 @@ import SideBar from "../Sidebar/SideBar";
 
 const drawerWidth = 240;
 
-export default function DashboardDrawer({
+export default function DashBoardDrawer({
   children,
 }: {
   children: React.ReactNode;
@@ -34,6 +38,7 @@ export default function DashboardDrawer({
       setMobileOpen(!mobileOpen);
     }
   };
+  const { data, isLoading } = useGetSingleUserQuery({});
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -43,6 +48,9 @@ export default function DashboardDrawer({
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
+
+          boxShadow: 0,
+          borderBottom: "2px solid lightgray",
         }}
       >
         <Toolbar>
@@ -51,17 +59,43 @@ export default function DashboardDrawer({
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+            sx={{ mr: 2, display: { sm: "none" }, color: "primary.main" }}
           >
             <MenuIcon />
           </IconButton>
-          <Box>
-            <Typography variant="body1" noWrap component="div" color={"white"}>
-              Hi, Mostakem Hossain
-            </Typography>
-            <Typography variant="body1" noWrap component="div">
-              Welcome To FlatMatch!!!
-            </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            <Box>
+              <Typography variant="body2" noWrap component="div">
+                hi,{" "}
+                {isLoading ? (
+                  <Box sx={{ width: "20%" }}>
+                    <LinearProgress />
+                  </Box>
+                ) : (
+                  data && data?.fullName
+                )}
+              </Typography>
+              <Typography
+                variant="body2"
+                noWrap
+                component="div"
+             
+                fontWeight={600}
+              >
+                Welcome to Flat Match!!!
+              </Typography>
+            </Box>
+            <Stack direction={"row"} gap={3}>
+              <Avatar alt={data?.name} src={data?.profilePhoto} />
+              <AccountMenu />
+            </Stack>
           </Box>
         </Toolbar>
       </AppBar>
@@ -111,7 +145,8 @@ export default function DashboardDrawer({
         }}
       >
         <Toolbar />
-        <Box>{children}</Box>
+
+        {children}
       </Box>
     </Box>
   );
