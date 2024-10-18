@@ -14,35 +14,24 @@ export type FormValues = {
 };
 
 const ContactForm = () => {
-   const [createContact]= useCreateContactMutation()
+  const [createContact] = useCreateContactMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset, 
   } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
-    
     try {
-        const res= await createContact(values).unwrap();
-        if(res.id){
-            toast.success("Message sent successfully");
-
-        }
-     
+      const res = await createContact(values).unwrap();
+      if (res.id) {
+        toast.success("Message sent successfully");
+        reset(); 
+      }
     } catch (error) {
       toast.error("Failed to send message");
     }
-    // try {
-    //   const res = await userLogin(values)
-    //   if (res?.data?.accessToken) {
-    //     toast.success(res?.message)
-    //     storeUserInfo({ accessToken: res?.data?.accessToken })
-    //     router.push('/')
-    //   }
-    // } catch (err: any) {
-    //   console.error(err.message)
-    // }
   };
 
   return (

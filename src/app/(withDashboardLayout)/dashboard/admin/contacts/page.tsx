@@ -1,13 +1,54 @@
 "use client";
-import { useGetContactQuery } from "@/redux/api/contactApi";
-import { Box, Button, Skeleton, Typography } from "@mui/material";
+import {
+  useDeleteContactMutation,
+  useGetContactQuery,
+} from "@/redux/api/contactApi";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const Contacts = () => {
   const { data, isLoading } = useGetContactQuery("");
+  const [deleteContact] = useDeleteContactMutation();
 
-  const handleDelete = (id: any) => {
-    console.log("Deleting contact with id:", id);
+  
+  const [open, setOpen] = useState(false);
+  const [selectedContactId, setSelectedContactId] = useState<string | null>(
+    null
+  );
+
+  const handleClickOpen = (id: string) => {
+    setSelectedContactId(id); 
+    setOpen(true); 
+  };
+
+  const handleClose = () => {
+    setOpen(false); 
+    setSelectedContactId(null); 
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (selectedContactId) {
+      try {
+        const res = await deleteContact(selectedContactId).unwrap();
+        if (res.id) {
+          toast.success("Contact delete successfully");
+        }
+
+        setOpen(false);
+      } catch (error) {}
+    }
   };
 
   const columns = [
@@ -23,8 +64,10 @@ const Contacts = () => {
       renderCell: (params: any) => (
         <Button
           variant="contained"
-          color="secondary"
-          onClick={() => handleDelete(params.row.id)}
+          sx={{
+            background: "#EC5312",
+          }}
+          onClick={() => handleClickOpen(params.row.id)}
         >
           Delete
         </Button>
@@ -56,6 +99,35 @@ const Contacts = () => {
       </Typography>
 
       <DataGrid rows={rows} columns={columns} />
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Delete Contact?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this contact? 
+            undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDeleteConfirm}
+            color="primary"
+            autoFocus
+            variant="contained"
+            sx={{ backgroundColor: "#EC5312" }}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
