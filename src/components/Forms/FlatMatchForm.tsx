@@ -25,7 +25,7 @@ const FlatMatchForm = ({
     formConfig["resolver"] = resolver;
   }
   if (defaultValues) {
-    formConfig["defaultValues"] = resolver;
+    formConfig["defaultValues"] = defaultValues; 
   }
   const methods = useForm(formConfig);
   const { handleSubmit, reset } = methods;

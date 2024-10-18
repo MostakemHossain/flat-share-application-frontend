@@ -20,6 +20,7 @@ const FlatMatchInput = ({
   sx,
   placeholder,
   required,
+ 
 }: TInputProps) => {
   const { control } = useFormContext();
   return (
@@ -35,6 +36,7 @@ const FlatMatchInput = ({
           variant="outlined"
           size={size}
           sx={{ ...sx }}
+         
           placeholder={label}
           required={required}
           error={!!error?.message}

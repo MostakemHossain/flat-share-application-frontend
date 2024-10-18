@@ -15,11 +15,14 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "sonner";
 import CreateFlatModal from "./CreateFlatModal";
 import ConfirmDeleteModal from "./FlatDelete";
+import UpdateFlatModal from "./UpdateFlatModal"; 
 
 const CreateFlat = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = React.useState(false); 
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = React.useState(false);
   const [flatToDelete, setFlatToDelete] = React.useState<string | null>(null);
+  const [flatToUpdate, setFlatToUpdate] = React.useState<string | null>(null); 
   const query: Record<string, any> = {};
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -40,7 +43,8 @@ const CreateFlat = () => {
   }
 
   const handleEdit = (id: string) => {
-    console.log("Edit flat with ID:", id);
+    setFlatToUpdate(id); 
+    setIsUpdateModalOpen(true); 
   };
 
   const handleDelete = async (id: string) => {
@@ -113,15 +117,19 @@ const CreateFlat = () => {
           <Stack direction="row" spacing={1}>
             <Button
               variant="outlined"
-              onClick={() => handleEdit(params.id as string)}
+              onClick={() => handleEdit(params.id as string)} 
               startIcon={<FaEdit />}
-            ></Button>
+            >
+              
+            </Button>
             <Button
               variant="outlined"
               color="error"
               onClick={() => handleOpenConfirmDelete(params.id as string)}
               startIcon={<FaTrash />}
-            ></Button>
+            >
+           
+            </Button>
           </Stack>
         </Box>
       ),
@@ -154,6 +162,11 @@ const CreateFlat = () => {
           Create A New Flat
         </Button>
         <CreateFlatModal open={isModalOpen} setOpen={setIsModalOpen} />
+        <UpdateFlatModal
+          open={isUpdateModalOpen}
+          setOpen={setIsUpdateModalOpen}
+          flatId={flatToUpdate} 
+        />
         <TextField
           onChange={(e) => setSearchTerm(e.target.value)}
           size="small"
