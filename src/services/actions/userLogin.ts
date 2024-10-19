@@ -1,6 +1,5 @@
-"use server";
+// "use server";
 
-import { IUserLogin } from "@/components/Shared/Navbar/SignInModal";
 import { FieldValues } from "react-hook-form";
 
 export const userLogin = async (formData: FieldValues) => {
@@ -12,7 +11,7 @@ export const userLogin = async (formData: FieldValues) => {
       headers: {
         "Content-Type": "application/json",
       },
-      cache: "no-store",
+      credentials: "include",
     }
   );
   const userInfo = await res.json();

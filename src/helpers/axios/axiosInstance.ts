@@ -1,6 +1,7 @@
 import { authKey } from "@/constants/authKey";
+import { getNewAccessToken } from "@/services/auth.Service";
 import { IGenericErrorResponse, ResponseSuccessType } from "@/types";
-import { getFormLocalStorage } from "@/utils/local-storage";
+import { getFormLocalStorage, setToLocalStorage } from "@/utils/local-storage";
 import axios from "axios";
 
 const instance = axios.create();
@@ -18,11 +19,9 @@ instance.interceptors.request.use(
     return config;
   },
   function (error) {
-  
     return Promise.reject(error);
   }
 );
-
 
 instance.interceptors.response.use(
   //@ts-ignore
@@ -33,14 +32,25 @@ instance.interceptors.response.use(
     };
     return responseObj;
   },
-  function (error) {
-  
-    const responseObj: IGenericErrorResponse = {
-      statusCode: error?.response?.data?.statusCode || 500,
-      message: error?.response?.data?.message || "Internal Server Error",
-      errorMessages: error?.response?.data?.message,
-    };
-    return responseObj;
+  async function (error) {
+    const config = error.config;
+
+    if (error?.response?.status === 500 && !config.sent) {
+      config.sent = true;
+      const response = await getNewAccessToken();
+      const accessToken = response?.data?.accessToken;
+      config.headers["Authorization"] = accessToken;
+      setToLocalStorage(authKey, accessToken);
+      return instance(config);
+    } else {
+      const responseObj: IGenericErrorResponse = {
+        statusCode: error?.response?.data?.statusCode || 500,
+        message: error?.response?.data?.message || "Internal Server Error",
+        errorMessages: error?.response?.data?.message,
+      };
+      // Use Promise.reject to handle error properly
+      return Promise.reject(responseObj);
+    }
   }
 );
 
