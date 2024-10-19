@@ -1,5 +1,6 @@
 import { USER_ROLE } from "@/constants/role";
 import { DrawerItem, userRole } from "@/types";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import ContactMailIcon from "@mui/icons-material/ContactMail";
@@ -9,6 +10,13 @@ import ReviewsIcon from "@mui/icons-material/Reviews";
 
 export const drawerItems = (role: userRole) => {
   const roleMenus: DrawerItem[] = [];
+  const defaultMenus = [
+    {
+      title: "Profile",
+      icon: AccountCircleIcon,
+      path: `${role}/profile`,
+    },
+  ];
   switch (role) {
     case USER_ROLE.SUPER_ADMIN:
       roleMenus.push(
@@ -88,5 +96,5 @@ export const drawerItems = (role: userRole) => {
       );
       break;
   }
-  return [...roleMenus];
+  return [...roleMenus,...defaultMenus];
 };

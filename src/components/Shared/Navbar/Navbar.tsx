@@ -108,12 +108,16 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
                 Home
               </Typography>
             </Link>
-            
+
             {user?.id && (
               <Link href={"/dashboard"}>
                 <Typography
                   variant="h6"
-                  sx={{ mx: 2, fontWeight: 600, "&:hover": { color: "#ed5311" } }}
+                  sx={{
+                    mx: 2,
+                    fontWeight: 600,
+                    "&:hover": { color: "#ed5311" },
+                  }}
                 >
                   Dashboard
                 </Typography>

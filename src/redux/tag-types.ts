@@ -4,4 +4,4 @@ export enum tagTypes {
   users = "users",
 }
 
-export const tagTypeList = [tagTypes.flats];
+export const tagTypeList = [tagTypes.flats, tagTypes.contacts, tagTypes.users];
