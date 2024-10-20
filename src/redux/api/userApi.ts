@@ -10,6 +10,13 @@ const userApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.users],
     }),
+    getAllUser: build.query({
+      query: () => ({
+        url: "/users",
+        method: "GET",
+      }),
+      providesTags: [tagTypes.users],
+    }),
     updateMyProfile: build.mutation({
       query: (data) => ({
         url: `/users/profile/update-my-profile`,
@@ -19,7 +26,20 @@ const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.users],
     }),
+    updateRoleAndStatusChange: build.mutation({
+      query: ({ data, id }) => ({
+        url: `/users/update-role/${id}`,
+        method: "PUT",
+        data,
+      }),
+      invalidatesTags: [tagTypes.users],
+    }),
   }),
 });
 
-export const { useGetSingleUserQuery, useUpdateMyProfileMutation } = userApi;
+export const {
+  useGetSingleUserQuery,
+  useUpdateMyProfileMutation,
+  useGetAllUserQuery,
+  useUpdateRoleAndStatusChangeMutation,
+} = userApi;
