@@ -27,22 +27,20 @@ const employeeApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.team],
     }),
-    getASingleFlat: build.query({
+    getASingleEmployee: build.query({
       query: (id) => ({
-        url: `/flats/${id}`,
+        url: `/teams/${id}`,
         method: "GET",
       }),
     }),
-    updateFlat: build.mutation({
+    updateEmployee: build.mutation({
       query: ({ id, data }) => ({
-        url: `/flats/update/${id}`,
+        url: `/teams/update-a-team-member/${id}`,
         method: "PUT",
+        contentType: "multipart/form-data",
         data,
-        headers: {
-          "Content-Type": "application/json",
-        },
       }),
-      invalidatesTags: [tagTypes.flats],
+      invalidatesTags: [tagTypes.team],
     }),
   }),
 });
@@ -51,4 +49,6 @@ export const {
   useCreateEmployeeMutation,
   useGetAllEmployeesQuery,
   useDeleteEmployeeMutation,
+  useGetASingleEmployeeQuery,
+  useUpdateEmployeeMutation,
 } = employeeApi;

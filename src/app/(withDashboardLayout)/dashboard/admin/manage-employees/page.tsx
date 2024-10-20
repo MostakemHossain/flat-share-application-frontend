@@ -20,12 +20,17 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import CreateAEmployeeModal from "./CreateAEmployeeModal";
 import ConfirmDeleteEmployeeModal from "./EmployeeDeleteModal";
+import UpdateEmployeeModal from "./UpdateEmployeeModal";
 
 const ManageEmployees = () => {
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = React.useState(false);
   const [employeeToDelete, setEmployeeToDelete] = React.useState<string | null>(
     null
   );
+  const [employeeToUpdate, setEmployeeToUpdate] = React.useState<string | null>(
+    null
+  );
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = React.useState(false);
   const [deleteEmployee] = useDeleteEmployeeMutation();
   const query: Record<string, any> = {};
   const [searchTerm, setSearchTerm] = useState("");
@@ -117,8 +122,8 @@ const ManageEmployees = () => {
   };
 
   const handleEdit = (id: string) => {
-    console.log("Edit clicked for ID:", id);
-    // Add edit logic here
+    setEmployeeToUpdate(id);
+    setIsUpdateModalOpen(true);
   };
 
   return (
@@ -133,6 +138,11 @@ const ManageEmployees = () => {
           Create A New Employee
         </Button>
         <CreateAEmployeeModal open={isModalOpen} setOpen={setIsModalOpen} />
+        <UpdateEmployeeModal
+          open={isUpdateModalOpen}
+          setOpen={setIsUpdateModalOpen}
+          employeeId={employeeToUpdate}
+        />
 
         <TextField
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -147,7 +157,9 @@ const ManageEmployees = () => {
           marginBottom: "20px",
         }}
       >
-        <Typography variant="h4">All Employees</Typography>
+        <Typography variant="h4">
+          All Employees ({employees?.length || 0})
+        </Typography>
       </Box>
       <Box sx={{ width: "100%" }}>
         <DataGrid
