@@ -6,6 +6,7 @@ import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import ContactMailIcon from "@mui/icons-material/ContactMail";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
+import HolidayVillageIcon from "@mui/icons-material/HolidayVillage";
 import ReviewsIcon from "@mui/icons-material/Reviews";
 
 export const drawerItems = (role: userRole) => {
@@ -36,6 +37,11 @@ export const drawerItems = (role: userRole) => {
           path: `${role}/manage-users`,
         },
         {
+          title: "Manage Employees",
+          icon: HolidayVillageIcon,
+          path: `${role}/manage-employees`,
+        },
+        {
           title: "Contacts",
           icon: ContactMailIcon,
           path: `${role}/contacts`,
@@ -63,6 +69,11 @@ export const drawerItems = (role: userRole) => {
           title: "Manage Users",
           icon: GroupIcon,
           path: `${role}/manage-users`,
+        },
+        {
+          title: "Manage Employees",
+          icon: HolidayVillageIcon,
+          path: `${role}/manage-employees`,
         },
         {
           title: "Contacts",
@@ -96,5 +107,5 @@ export const drawerItems = (role: userRole) => {
       );
       break;
   }
-  return [...roleMenus,...defaultMenus];
+  return [...roleMenus, ...defaultMenus];
 };

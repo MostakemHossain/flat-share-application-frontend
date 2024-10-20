@@ -19,15 +19,15 @@ type TProps = {
 const UpdateFlatModal = ({ open, setOpen, flatId }: TProps) => {
   const handleClose = () => setOpen(false);
 
-  // Ensure that the query is not made if `flatId` is invalid
+  
   const { data, isLoading } = useGetASingleFlatQuery(flatId, {
-    skip: !flatId, // Skip query if flatId is null or undefined
+    skip: !flatId, 
   });
 
   const [loading, setLoading] = useState(false);
   const [updateFlat] = useUpdateFlatMutation();
 
-  // Handle the case when data is loading
+  
   if (isLoading) {
     return (
       <Modal open={open} onClose={handleClose}>

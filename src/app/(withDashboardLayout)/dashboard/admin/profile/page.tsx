@@ -18,17 +18,10 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  MenuItem,
-  Select,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import {
-  Controller,
-  FieldValues,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 
 interface UserProfile {
@@ -48,7 +41,6 @@ const MyProfile = () => {
   const [fileList, setFileList] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const { control, handleSubmit } = useForm();
 
   const userProfile: UserProfile = {
     name: data?.fullName || "John Doe",
@@ -171,9 +163,8 @@ const MyProfile = () => {
                     {userProfile.role.toUpperCase()}
                   </span>
                 </Typography>
-                <Typography variant="h6">
-                  Gender: {userProfile.gender}
-                </Typography>
+                
+               
                 <Typography variant="h6">
                   Address: {userProfile.address}
                 </Typography>
@@ -203,11 +194,7 @@ const MyProfile = () => {
         maxWidth="sm"
       >
         <DialogTitle>Edit Profile</DialogTitle>
-        <FlatMatchForm
-          //@ts-ignore
-          onSubmit={handleSubmit(onSubmit)}
-          defaultValues={userProfile}
-        >
+        <FlatMatchForm onSubmit={onSubmit} defaultValues={userProfile}>
           <DialogContent>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -219,21 +206,7 @@ const MyProfile = () => {
               <Grid item xs={12}>
                 <FlatMatchInput name="address" label="Address" fullWidth />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                {/* Gender Select Dropdown */}
-                <Controller
-                  name="gender"
-                  control={control}
-                  defaultValue={userProfile.gender}
-                  render={({ field }) => (
-                    <Select {...field} label="Gender" fullWidth>
-                      <MenuItem value="MALE">Male</MenuItem>
-                      <MenuItem value="FEMALE">Female</MenuItem>
-                      <MenuItem value="OTHER">Other</MenuItem>
-                    </Select>
-                  )}
-                />
-              </Grid>
+              
               <Grid item xs={12}>
                 <FlatMatchInput name="bio" label="Bio" fullWidth />
               </Grid>
