@@ -20,12 +20,12 @@ const employeeApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.team],
     }),
-    deleteFlat: build.mutation({
+    deleteEmployee: build.mutation({
       query: (id) => ({
-        url: `/flats/${id}`,
+        url: `/teams/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.flats],
+      invalidatesTags: [tagTypes.team],
     }),
     getASingleFlat: build.query({
       query: (id) => ({
@@ -47,4 +47,8 @@ const employeeApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useCreateEmployeeMutation,useGetAllEmployeesQuery } = employeeApi;
+export const {
+  useCreateEmployeeMutation,
+  useGetAllEmployeesQuery,
+  useDeleteEmployeeMutation,
+} = employeeApi;

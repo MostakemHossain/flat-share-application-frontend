@@ -1,5 +1,8 @@
 "use client";
-import { useGetAllEmployeesQuery } from "@/redux/api/employeeApi";
+import {
+  useDeleteEmployeeMutation,
+  useGetAllEmployeesQuery,
+} from "@/redux/api/employeeApi";
 import { useDebounced } from "@/redux/hooks";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -13,10 +16,17 @@ import {
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
-import { useState } from "react";
+import React, { useState } from "react";
+import { toast } from "sonner";
 import CreateAEmployeeModal from "./CreateAEmployeeModal";
+import ConfirmDeleteEmployeeModal from "./EmployeeDeleteModal";
 
 const ManageEmployees = () => {
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = React.useState(false);
+  const [employeeToDelete, setEmployeeToDelete] = React.useState<string | null>(
+    null
+  );
+  const [deleteEmployee] = useDeleteEmployeeMutation();
   const query: Record<string, any> = {};
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -79,7 +89,7 @@ const ManageEmployees = () => {
         <GridActionsCellItem
           icon={<DeleteIcon />}
           label="Delete"
-          onClick={() => handleDelete(params.id as string)}
+          onClick={() => handleOpenConfirmDelete(params.id as string)}
           sx={{
             color: "red",
           }}
@@ -88,9 +98,22 @@ const ManageEmployees = () => {
     },
   ];
 
-  const handleDelete = (id: string) => {
-    console.log("Delete clicked for ID:", id);
-    // Add delete logic here
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await deleteEmployee(id).unwrap();
+      if (res.id) {
+        toast.success("Employee deleted Successfully");
+      }
+    } catch (error: any) {
+      console.error(error.message);
+    } finally {
+      setIsConfirmDeleteOpen(false);
+    }
+  };
+
+  const handleOpenConfirmDelete = (id: string) => {
+    setEmployeeToDelete(id);
+    setIsConfirmDeleteOpen(true);
   };
 
   const handleEdit = (id: string) => {
@@ -135,6 +158,12 @@ const ManageEmployees = () => {
           rowHeight={90}
         />
       </Box>
+      <ConfirmDeleteEmployeeModal
+        open={isConfirmDeleteOpen}
+        onClose={() => setIsConfirmDeleteOpen(false)}
+        onConfirm={handleDelete}
+        employeeId={employeeToDelete}
+      />
     </Box>
   );
 };

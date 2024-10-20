@@ -21,7 +21,6 @@ const CreateAEmployeeModal = ({ open, setOpen }: TProps) => {
   const [loading, setLoading] = useState(false);
 
   const handleFormSubmit = async (values: FieldValues) => {
-    console.log(values);
     const data = modifyPayload(values);
     setLoading(true);
     try {
