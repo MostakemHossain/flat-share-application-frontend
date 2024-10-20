@@ -2,7 +2,7 @@
 import Footer from "@/components/Shared/Footer/Footer";
 import Navbar from "@/components/Shared/Navbar/Navbar";
 import { ThemeProvider } from "@emotion/react";
-import { CssBaseline, createTheme } from "@mui/material";
+import { Box, CssBaseline, createTheme } from "@mui/material";
 import { useState } from "react";
 
 const CommonLayout = ({ children }: { children: React.ReactNode }) => {
@@ -45,7 +45,7 @@ const CommonLayout = ({ children }: { children: React.ReactNode }) => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Navbar toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
-      <div className="min-h-screen">{children}</div>
+      <Box className="min-h-screen">{children}</Box>
       <Footer />
     </ThemeProvider>
   );

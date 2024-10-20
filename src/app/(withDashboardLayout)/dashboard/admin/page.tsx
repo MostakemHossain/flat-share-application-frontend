@@ -1,7 +1,35 @@
 "use client";
 
-import { Box, Card, CardContent, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useGetSingleUserQuery } from "@/redux/api/userApi";
+import {
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  LinearProgress,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 // Mock data
 const totalUsers = 200;
@@ -50,7 +78,9 @@ const userTypes = [
   { type: "User", count: 175 },
 ];
 
+
 const AdminDashboard = () => {
+  const { data, isLoading } = useGetSingleUserQuery({});
   return (
     <Box p={4} sx={{ backgroundColor: "#F4F6F8", minHeight: "100vh" }}>
       {/* Welcome Section */}
@@ -68,13 +98,20 @@ const AdminDashboard = () => {
       >
         <Box>
           <Typography variant="h3" gutterBottom>
-            Welcome, Admin!
+            Welcome,{" "}
+            {isLoading ? (
+              <Box sx={{ width: "20%" }}>
+                <LinearProgress />
+              </Box>
+            ) : (
+              data && data?.fullName
+            )}
           </Typography>
           <Typography variant="body1">
-            Monitor key metrics such as users, flats, revenue, and temperature. Explore your dashboard below for insights.
+            Monitor key metrics such as users, flats, revenue, and temperature.
+            Explore your dashboard below for insights.
           </Typography>
         </Box>
-      
       </Box>
 
       <Grid container spacing={4}>
@@ -162,7 +199,10 @@ const AdminDashboard = () => {
                 label
               >
                 {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </Pie>
             </PieChart>

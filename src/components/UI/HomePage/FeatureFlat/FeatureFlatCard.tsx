@@ -8,6 +8,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 
 export interface Flat {
   id: string;
@@ -31,7 +32,7 @@ const FeatureFlatCard = ({ flat }: { flat: Flat }) => {
   return (
     <Card
       sx={{
-        maxWidth: { xs: "100%", sm: 345 }, // Full width on extra small devices, max width on small and up
+        maxWidth: { xs: "100%", sm: 345 },
         borderRadius: 5,
         boxShadow: 3,
         transition: "transform 0.5s ease, box-shadow 0.3s ease",
@@ -53,7 +54,7 @@ const FeatureFlatCard = ({ flat }: { flat: Flat }) => {
           "&:hover": {
             transform: "scale(1.1)",
           },
-          height: "200px", // Reduced height for better responsiveness
+          height: "200px",
           borderRadius: 3,
           objectFit: "cover",
         }}
@@ -89,21 +90,23 @@ const FeatureFlatCard = ({ flat }: { flat: Flat }) => {
           </Grid>
         </Grid>
         <Box mt={2}>
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{
-              borderRadius: 2,
-              boxShadow: 3,
-              "&:hover": {
-                backgroundColor: "#f83b02",
-                boxShadow: 6,
-              },
-            }}
-          >
-            VIEW DETAILS
-          </Button>
+          <Link href={`/flats/${flat.id}`}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{
+                borderRadius: 2,
+                boxShadow: 3,
+                "&:hover": {
+                  backgroundColor: "#f83b02",
+                  boxShadow: 6,
+                },
+              }}
+            >
+              VIEW DETAILS
+            </Button>
+          </Link>
         </Box>
       </CardContent>
     </Card>
