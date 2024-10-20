@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import CreateFlatModal from "./CreateFlatModal";
 import ConfirmDeleteModal from "./FlatDelete";
 import UpdateFlatModal from "./UpdateFlatModal"; 
+import Image from "next/image";
 
 const CreateFlat = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -71,7 +72,7 @@ const CreateFlat = () => {
       headerName: "Image",
       width: 100,
       renderCell: (params) => (
-        <img
+        <Image
           src={params.value[0]}
           alt="Flat"
           style={{ width: "80px", height: "auto" }}

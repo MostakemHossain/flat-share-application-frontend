@@ -84,6 +84,7 @@ const ManageEmployees = () => {
       width: 170,
       getActions: (params) => [
         <GridActionsCellItem
+          key={params.id}
           icon={<EditIcon />}
           label="Edit"
           onClick={() => handleEdit(params.id as string)}
@@ -93,6 +94,7 @@ const ManageEmployees = () => {
         />,
         <GridActionsCellItem
           icon={<DeleteIcon />}
+          key={params.id}
           label="Delete"
           onClick={() => handleOpenConfirmDelete(params.id as string)}
           sx={{

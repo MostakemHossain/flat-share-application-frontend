@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -107,7 +108,7 @@ const ManageUsers = () => {
       headerName: "Profile Photo",
       width: 100,
       renderCell: (params) => (
-        <img
+        <Image
           src={params.value || "https://via.placeholder.com/80"}
           alt="User"
           style={{ width: "80px", height: "auto", borderRadius: "50%" }}
