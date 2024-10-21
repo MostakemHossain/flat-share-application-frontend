@@ -1,7 +1,9 @@
 "use client";
 
+import { authKey } from "@/constants/authKey";
 import { useCreateBookingMutation } from "@/redux/api/bookingApi";
 import { useGetASingleFlatQuery } from "@/redux/api/flat";
+import { removeFormLocalStorage } from "@/utils/local-storage";
 import {
   Avatar,
   Box,
@@ -17,7 +19,6 @@ import Lottie from "lottie-react";
 import Image from "next/image";
 import { toast } from "sonner";
 import loading from "../../../../../public/an.json";
-import { useGetSingleUserQuery } from "@/redux/api/userApi";
 
 interface FlatDetailsProps {
   params: {
@@ -26,7 +27,6 @@ interface FlatDetailsProps {
 }
 
 const FlatDetails = ({ params }: FlatDetailsProps) => {
-  const { data: userData } = useGetSingleUserQuery({});
   const { data, isLoading } = useGetASingleFlatQuery(params.flatId);
   const [createBooking] = useCreateBookingMutation();
 
@@ -54,10 +54,6 @@ const FlatDetails = ({ params }: FlatDetailsProps) => {
   const flat = data;
 
   const makeBooking = async () => {
-    if (!userData) {
-      toast.error("Please log in first");
-      return;
-    }
     try {
       const res = await createBooking({ flatId: params.flatId }).unwrap();
 
@@ -65,7 +61,8 @@ const FlatDetails = ({ params }: FlatDetailsProps) => {
         toast.success("Booking created successfully");
       }
     } catch (error: any) {
-      toast.error(error.message);
+      removeFormLocalStorage(authKey);
+      toast.error(error.data);
     }
   };
 

@@ -1,5 +1,6 @@
 import FlatMatchForm from "@/components/Forms/FlatMatchForm";
 import FlatMatchInput from "@/components/Forms/FlatMatchInput";
+import { useGetSingleUserQuery } from "@/redux/api/userApi";
 import { userLogin } from "@/services/actions/userLogin";
 import { storeUserInfo } from "@/services/auth.Service";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,11 +58,13 @@ const SignInModal: React.FC<SignInModalProps> = ({
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { data, isLoading } = useGetSingleUserQuery({});
 
   const handleLogin = async (data: FieldValues) => {
     setLoading(true);
     try {
       const res = await userLogin(data);
+      console.log(res.data);
 
       if (res?.data?.accessToken) {
         storeUserInfo({ accessToken: res?.data?.accessToken });
@@ -77,7 +80,7 @@ const SignInModal: React.FC<SignInModalProps> = ({
           },
         });
         onClose();
-        router.push("/dashboard");
+        router.push(`/dashboard`);
       } else {
         throw new Error(res?.message || "Login failed");
       }

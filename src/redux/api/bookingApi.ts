@@ -7,16 +7,16 @@ const bookingApi = baseApi.injectEndpoints({
       query: (data) => ({
         url: "/bookings/post-a-booking",
         method: "POST",
-       data,
+        data,
       }),
       invalidatesTags: [tagTypes.booking],
     }),
-    getContact: build.query({
+    getMyBookings: build.query({
       query: () => ({
-        url: `/contact`,
+        url: `/bookings/my-booking-request`,
         method: "GET",
       }),
-      providesTags: [tagTypes.contacts],
+      providesTags: [tagTypes.booking],
     }),
     deleteContact: build.mutation({
       query: (contactId) => ({
@@ -30,6 +30,6 @@ const bookingApi = baseApi.injectEndpoints({
 
 export const {
   useCreateBookingMutation,
-  useGetContactQuery,
+  useGetMyBookingsQuery,
   useDeleteContactMutation,
 } = bookingApi;
