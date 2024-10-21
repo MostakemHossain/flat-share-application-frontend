@@ -51,6 +51,22 @@ const MyBookings = () => {
       ),
     },
   ];
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+        }}
+      >
+        <Skeleton width={300} height={80} />
+        <Skeleton width={300} height={80} />
+        <Skeleton width={300} height={80} />
+      </Box>
+    );
+  }
 
   const rows =
     data?.data?.map((booking: any) => ({
@@ -68,23 +84,6 @@ const MyBookings = () => {
     })) || [];
 
   const totalBookings = rows?.length;
-
-  if (isLoading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-        }}
-      >
-        <Skeleton width={300} height={80} />
-        <Skeleton width={300} height={80} />
-        <Skeleton width={300} height={80} />
-      </Box>
-    );
-  }
 
   return (
     <Box sx={{ width: "100%", marginTop: "30px" }}>
