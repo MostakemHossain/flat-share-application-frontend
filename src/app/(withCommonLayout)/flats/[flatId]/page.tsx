@@ -1,5 +1,6 @@
 "use client";
 
+import { useCreateBookingMutation } from "@/redux/api/bookingApi";
 import { useGetASingleFlatQuery } from "@/redux/api/flat";
 import {
   Avatar,
@@ -14,6 +15,7 @@ import {
 } from "@mui/material";
 import Lottie from "lottie-react";
 import Image from "next/image";
+import { toast } from "sonner";
 import loading from "../../../../../public/an.json";
 
 interface FlatDetailsProps {
@@ -24,6 +26,7 @@ interface FlatDetailsProps {
 
 const FlatDetails = ({ params }: FlatDetailsProps) => {
   const { data, isLoading } = useGetASingleFlatQuery(params.flatId);
+  const [createBooking] = useCreateBookingMutation();
 
   if (isLoading) {
     return (
@@ -48,19 +51,31 @@ const FlatDetails = ({ params }: FlatDetailsProps) => {
 
   const flat = data;
 
+  const makeBooking = async () => {
+    try {
+      const res = await createBooking(params.flatId).unwrap();
+      console.log(res);
+      if (res.id) {
+        toast.success("Booking created successfully");
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   return (
-    <Box sx={{ padding: { xs: 0, md: 10 } }}>
+    <Box sx={{ padding: { xs: 2, md: 10 } }}>
       <Box sx={{ mb: 4 }}>
         <Image
           src={flat.photos[0]}
           alt="Flat Image"
-          width={1500} 
+          width={1500}
           height={700}
           style={{
             borderRadius: "8px",
             objectFit: "cover",
-            width: "100%", 
-            maxHeight: "100vh", 
+            width: "100%",
+            maxHeight: "100vh",
           }}
         />
       </Box>
@@ -223,8 +238,15 @@ const FlatDetails = ({ params }: FlatDetailsProps) => {
           </List>
         </Paper>
       </Grid>
-      <Box sx={{ textAlign: "center", marginTop: "40px" }}>
-        <Button variant="contained" color="primary" size="large">
+      <Box
+        sx={{ textAlign: "center", marginTop: "40px", marginBottom: "20px" }}
+      >
+        <Button
+          onClick={makeBooking}
+          variant="contained"
+          color="primary"
+          size="large"
+        >
           Book Now
         </Button>
       </Box>

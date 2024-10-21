@@ -90,19 +90,7 @@ const HotFlat = () => {
               </Grid>
             ))}
         </Grid>
-        <Box mt={4} textAlign="center">
-          <Link href={"/flats"}>
-            <Button
-              color="primary"
-              sx={{
-                borderRadius: 2,
-                textTransform: "none",
-              }}
-            >
-              See More
-            </Button>
-          </Link>
-        </Box>
+        
       </Box>
     </Container>
   );
