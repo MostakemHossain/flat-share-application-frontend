@@ -84,6 +84,7 @@ const MyBookings = () => {
       ),
     },
   ];
+
   if (isLoading) {
     return (
       <Box
@@ -101,29 +102,31 @@ const MyBookings = () => {
     );
   }
 
-  const rows =
-    data?.data?.map((booking: any) => ({
-      id: booking?.id,
-      status: booking?.status,
-      createdAt: new Date(booking.createdAt).toLocaleString() || "",
-      flatLocation: booking?.flat?.location || "",
-      flatSquareFeet: booking?.flat?.squareFeet || 0,
-      flatBedrooms: booking?.flat?.totalBedrooms || 0,
-      flatRooms: booking?.flat?.totalRooms || 0,
-      flatRent: booking?.flat?.rent || 0,
-      flatDescription: booking?.flat?.description || "",
-      flatUtilities: booking?.flat?.utilitiesDescription || "",
-      flatPhoto: booking?.flat?.photos[0] || "",
-    })) || [];
-
-  const totalBookings = rows?.length;
-
   return (
     <Box sx={{ width: "100%", marginTop: "30px" }}>
       <Typography variant="h4" component="h2" sx={{ mb: 5 }}>
-        My Bookings ({totalBookings})
+        My Bookings ({data?.data?.length || 0})
       </Typography>
-      <DataGrid rows={rows} columns={columns} autoHeight rowHeight={90} />
+      <DataGrid
+        rows={
+          data?.data?.map((booking: any) => ({
+            id: booking?.id,
+            status: booking?.status,
+            createdAt: new Date(booking.createdAt).toLocaleString() || "",
+            flatLocation: booking?.flat?.location || "",
+            flatSquareFeet: booking?.flat?.squareFeet || 0,
+            flatBedrooms: booking?.flat?.totalBedrooms || 0,
+            flatRooms: booking?.flat?.totalRooms || 0,
+            flatRent: booking?.flat?.rent || 0,
+            flatDescription: booking?.flat?.description || "",
+            flatUtilities: booking?.flat?.utilitiesDescription || "",
+            flatPhoto: booking?.flat?.photos[0] || "",
+          })) || []
+        }
+        columns={columns}
+        autoHeight
+        rowHeight={90}
+      />
     </Box>
   );
 };
