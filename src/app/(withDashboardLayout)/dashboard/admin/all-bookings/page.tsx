@@ -13,11 +13,15 @@ import {
   Typography,
 } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const MyBookings = () => {
   const { data, isLoading } = useGetALLBookingRequestQuery({});
   const [approvedBookingRequest] = useApprovedBookingRequestMutation();
+
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [loadingDelay, setLoadingDelay] = useState(true);
 
   const statusOptions = ["PENDING", "BOOKING", "REJECTED"];
   const statusColors: { [key: string]: "warning" | "success" | "error" } = {
@@ -25,6 +29,17 @@ const MyBookings = () => {
     BOOKING: "success",
     REJECTED: "error",
   };
+
+  // Simulate a loading delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoadingDelay(false);
+      if (data?.data) {
+        setBookings(data.data);
+      }
+    }, 5000); // 5 seconds delay
+    return () => clearTimeout(timer);
+  }, [data]);
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
@@ -85,7 +100,8 @@ const MyBookings = () => {
     },
   ];
 
-  if (isLoading) {
+  // Show skeleton loading for 5 seconds or until data is loaded
+  if (loadingDelay || isLoading) {
     return (
       <Box
         sx={{
@@ -95,9 +111,9 @@ const MyBookings = () => {
           minHeight: "100vh",
         }}
       >
-        <Skeleton width={300} height={80} />
-        <Skeleton width={300} height={80} />
-        <Skeleton width={300} height={80} />
+        {[...Array(3)].map((_, index) => (
+          <Skeleton key={index} width={300} height={80} />
+        ))}
       </Box>
     );
   }
@@ -105,11 +121,11 @@ const MyBookings = () => {
   return (
     <Box sx={{ width: "100%", marginTop: "30px" }}>
       <Typography variant="h4" component="h2" sx={{ mb: 5 }}>
-        My Bookings ({data?.data?.length || 0})
+        My Bookings ({bookings.length})
       </Typography>
       <DataGrid
         rows={
-          data?.data?.map((booking: any) => ({
+          bookings.map((booking: any) => ({
             id: booking?.id,
             status: booking?.status,
             createdAt: new Date(booking.createdAt).toLocaleString() || "",
