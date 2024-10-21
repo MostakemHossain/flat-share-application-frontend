@@ -1,5 +1,7 @@
 "use client";
+import { authKey } from "@/constants/authKey";
 import { useApprovedBookingRequestMutation } from "@/redux/api/bookingApi";
+import { getFormLocalStorage } from "@/utils/local-storage";
 import {
   Avatar,
   Box,
@@ -27,18 +29,29 @@ const MyBookings = () => {
     REJECTED: "error",
   };
 
-
   useEffect(() => {
     const fetchBookings = async () => {
       try {
+        const token = await getFormLocalStorage(authKey);
+
         const response = await fetch(
-          "https://flat-match-backend.vercel.app/api/v1/bookings/all-booking-request"
+          "https://flat-match-backend.vercel.app/api/v1/bookings/all-booking-request",
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
+
         if (!response.ok) {
           throw new Error("Failed to fetch bookings");
         }
+
         const result = await response.json();
-        setData(result?.data);
+        setData(result.data);
       } catch (error: any) {
         setError(error.message);
       } finally {
