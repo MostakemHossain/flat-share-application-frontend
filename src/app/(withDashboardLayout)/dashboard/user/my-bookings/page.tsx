@@ -45,8 +45,8 @@ const MyBookings = () => {
       width: 150,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
-          label={params.value}
-          color={statusColors[params.value] || "default"}
+          label={params?.value}
+          color={statusColors[params?.value] || "default"}
         />
       ),
     },
@@ -54,17 +54,17 @@ const MyBookings = () => {
 
   const rows =
     data?.data?.map((booking: any) => ({
-      id: booking.id,
-      status: booking.status,
-      createdAt: new Date(booking.createdAt).toLocaleString(),
-      flatLocation: booking.flat.location,
-      flatSquareFeet: booking.flat.squareFeet,
-      flatBedrooms: booking.flat.totalBedrooms,
-      flatRooms: booking.flat.totalRooms,
-      flatRent: booking.flat.rent,
-      flatDescription: booking.flat.description,
-      flatUtilities: booking.flat.utilitiesDescription,
-      flatPhoto: booking.flat.photos[0],
+      id: booking?.id,
+      status: booking?.status,
+      createdAt: new Date(booking?.createdAt).toLocaleString(),
+      flatLocation: booking?.flat?.location,
+      flatSquareFeet: booking?.flat?.squareFeet,
+      flatBedrooms: booking?.flat?.totalBedrooms,
+      flatRooms: booking?.flat?.totalRooms,
+      flatRent: booking?.flat?.rent,
+      flatDescription: booking?.flat?.description,
+      flatUtilities: booking?.flat?.utilitiesDescription,
+      flatPhoto: booking?.flat?.photos[0],
     })) || [];
 
   const totalBookings = rows?.length;
