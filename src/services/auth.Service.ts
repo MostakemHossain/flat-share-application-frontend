@@ -35,8 +35,8 @@ export const removeUser = () => {
 
 export const getNewAccessToken = async () => {
   return await axiosInstance({
-    // url: "http://localhost:8500/api/v1/auth/refresh-token",
-    url: "https://flat-match-backend.vercel.app/api/v1/auth/refresh-token",
+    url: "http://localhost:8500/api/v1/auth/refresh-token",
+    // url: "https://flat-match-backend.vercel.app/api/v1/auth/refresh-token",
     method: "POST",
     headers: {
       "Content-Type": "application/json",

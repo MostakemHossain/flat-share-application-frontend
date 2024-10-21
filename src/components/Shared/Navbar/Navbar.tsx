@@ -108,7 +108,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
                 Home
               </Typography>
             </Link>
-            {/* Show Dashboard link only if user is logged in */}
+            
             {user?.id && (
               <Link href={"/dashboard"}>
                 <Typography
@@ -190,7 +190,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleDarkMode, darkMode }) => {
               >
                 <Link href={"/"}>Home</Link>
               </MenuItem>
-              {/* Show Dashboard link only if user is logged in */}
+             
               {user?.id && (
                 <MenuItem
                   sx={{ fontWeight: 600, "&:hover": { color: "#ed5311" } }}

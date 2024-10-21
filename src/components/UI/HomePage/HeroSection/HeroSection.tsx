@@ -12,7 +12,7 @@ const HomePage = () => {
           alignItems: "center",
           justifyContent: "center",
           padding: { xs: "20px 10px", md: "50px 20px", lg: "50px" },
-          //   background: "linear-gradient(to right, #5a565261 0%, #e6e19f 100%)",
+     
           borderRadius: "15px",
           boxShadow: "0px 4px 15px rgba(0,0,0,0.1)",
           minHeight: "100vh",
@@ -80,7 +80,7 @@ const HomePage = () => {
                 >
                   Find a Flat
                 </Button>
-                <Link href="/tour-page">
+                <Link href="/">
                   <Button
                     variant="outlined"
                     sx={{
@@ -116,7 +116,7 @@ const HomePage = () => {
                   width: "100%",
                   borderRadius: "15px",
                   position: { xs: "relative", md: "absolute" },
-                  top: { xs: "auto", md: "-400px" },
+                  top: { xs: "auto", md: "-350px" },
                   right: { xs: "auto", md: "100px" },
                   marginBottom: { xs: 2, md: 0 },
                 }}

@@ -8,7 +8,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import {
   Box,
   Button,
-  CircularProgress, 
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react"; 
+import React, { useState } from "react";
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -56,10 +56,10 @@ const SignInModal: React.FC<SignInModalProps> = ({
   onSwitchToSignUp,
 }) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (data: FieldValues) => {
-    setLoading(true); 
+    setLoading(true);
     try {
       const res = await userLogin(data);
 
@@ -94,20 +94,46 @@ const SignInModal: React.FC<SignInModalProps> = ({
         },
       });
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   const handleDemoLogin = async (role: string) => {
-    const demoCredentials = {
-      email: role === "admin" ? "admin101@gmail.com" : "user00@gmail.com",
-      password: role === "admin" ? "admin12345" : "user12345",
-    };
+    console.log(role);
+    let demoCredentials;
+
+    switch (role) {
+      case "admin":
+        demoCredentials = {
+          email: "admin101@gmail.com",
+          password: "admin12345",
+        };
+        break;
+      case "user":
+        demoCredentials = {
+          email: "user00@gmail.com",
+          password: "user12345",
+        };
+        break;
+      default:
+        toast.error("Invalid role selected", {
+          duration: 5000,
+          position: "bottom-right",
+          icon: "❌",
+          style: {
+            background: "#ff4d4d",
+            color: "white",
+            fontSize: "16px",
+            borderRadius: "20px",
+          },
+        });
+        return;
+    }
+
     await handleLogin(demoCredentials);
   };
 
   const handleGoogleLogin = () => {
-    
     toast.info("Google login not implemented yet");
   };
 
@@ -184,49 +210,45 @@ const SignInModal: React.FC<SignInModalProps> = ({
             width: "100%",
           }}
         >
-        
           <Button
             type="submit"
             variant="contained"
             color="primary"
             fullWidth
-            disabled={loading} 
-            startIcon={loading ? <CircularProgress size={20} /> : null} 
+            disabled={loading}
+            startIcon={loading ? <CircularProgress size={20} /> : null}
           >
             {loading ? "Signing In..." : "Sign In"}
           </Button>
 
-       
           <Stack direction="row" spacing={2} width="100%">
             <Button
               variant="outlined"
-              color="primary" 
+              color="primary"
               fullWidth
-              
-              disabled={loading} 
+              disabled={loading}
               onClick={() => handleDemoLogin("user")}
             >
               Demo User
             </Button>
             <Button
               variant="outlined"
-              color="error" 
+              color="error"
               fullWidth
-              disabled={loading} 
+              disabled={loading}
               onClick={() => handleDemoLogin("admin")}
             >
               Demo Admin
             </Button>
           </Stack>
 
-          
           <Button
             variant="outlined"
             color="secondary"
             fullWidth
-            startIcon={<GoogleIcon />} 
+            startIcon={<GoogleIcon />}
             onClick={handleGoogleLogin}
-            disabled={loading} 
+            disabled={loading}
           >
             Sign in with Google
           </Button>

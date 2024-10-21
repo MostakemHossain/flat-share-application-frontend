@@ -17,6 +17,7 @@ import Lottie from "lottie-react";
 import Image from "next/image";
 import { toast } from "sonner";
 import loading from "../../../../../public/an.json";
+import { useGetSingleUserQuery } from "@/redux/api/userApi";
 
 interface FlatDetailsProps {
   params: {
@@ -25,6 +26,7 @@ interface FlatDetailsProps {
 }
 
 const FlatDetails = ({ params }: FlatDetailsProps) => {
+  const { data: userData } = useGetSingleUserQuery({});
   const { data, isLoading } = useGetASingleFlatQuery(params.flatId);
   const [createBooking] = useCreateBookingMutation();
 
@@ -52,9 +54,13 @@ const FlatDetails = ({ params }: FlatDetailsProps) => {
   const flat = data;
 
   const makeBooking = async () => {
+    if (!userData) {
+      toast.error("Please log in first");
+      return;
+    }
     try {
-      const res = await createBooking(params.flatId).unwrap();
-      console.log(res);
+      const res = await createBooking({ flatId: params.flatId }).unwrap();
+
       if (res.id) {
         toast.success("Booking created successfully");
       }
