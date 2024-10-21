@@ -1,8 +1,5 @@
 "use client";
-import {
-  useApprovedBookingRequestMutation,
-  useGetALLBookingRequestQuery,
-} from "@/redux/api/bookingApi";
+import { useApprovedBookingRequestMutation } from "@/redux/api/bookingApi";
 import {
   Avatar,
   Box,
@@ -17,11 +14,11 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const MyBookings = () => {
-  const { data, isLoading } = useGetALLBookingRequestQuery({});
-  const [approvedBookingRequest] = useApprovedBookingRequestMutation();
+  const [data, setData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [loadingDelay, setLoadingDelay] = useState(true);
+  const [approvedBookingRequest] = useApprovedBookingRequestMutation();
 
   const statusOptions = ["PENDING", "BOOKING", "REJECTED"];
   const statusColors: { [key: string]: "warning" | "success" | "error" } = {
@@ -30,16 +27,27 @@ const MyBookings = () => {
     REJECTED: "error",
   };
 
-  // Simulate a loading delay
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoadingDelay(false);
-      if (data?.data) {
-        setBookings(data.data);
+    const fetchBookings = async () => {
+      try {
+        const response = await fetch(
+          "https://flat-match-backend.vercel.app/api/v1/bookings/all-booking-request"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch bookings");
+        }
+        const result = await response.json();
+        setData(result?.data);
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
       }
-    }, 5000); // 5 seconds delay
-    return () => clearTimeout(timer);
-  }, [data]);
+    };
+
+    fetchBookings();
+  }, []);
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
@@ -100,8 +108,7 @@ const MyBookings = () => {
     },
   ];
 
-  // Show skeleton loading for 5 seconds or until data is loaded
-  if (loadingDelay || isLoading) {
+  if (isLoading) {
     return (
       <Box
         sx={{
@@ -111,38 +118,44 @@ const MyBookings = () => {
           minHeight: "100vh",
         }}
       >
-        {[...Array(3)].map((_, index) => (
-          <Skeleton key={index} width={300} height={80} />
-        ))}
+        <Skeleton width={300} height={80} />
+        <Skeleton width={300} height={80} />
+        <Skeleton width={300} height={80} />
       </Box>
     );
   }
 
+  if (error) {
+    return (
+      <Box sx={{ color: "error.main", textAlign: "center", marginTop: 3 }}>
+        <Typography variant="h6">{error}</Typography>
+      </Box>
+    );
+  }
+
+  const rows =
+    data?.map((booking: any) => ({
+      id: booking?.id,
+      status: booking?.status,
+      createdAt: new Date(booking.createdAt).toLocaleString() || "",
+      flatLocation: booking?.flat?.location || "",
+      flatSquareFeet: booking?.flat?.squareFeet || 0,
+      flatBedrooms: booking?.flat?.totalBedrooms || 0,
+      flatRooms: booking?.flat?.totalRooms || 0,
+      flatRent: booking?.flat?.rent || 0,
+      flatDescription: booking?.flat?.description || "",
+      flatUtilities: booking?.flat?.utilitiesDescription || "",
+      flatPhoto: booking?.flat?.photos[0] || "",
+    })) || [];
+
+  const totalBookings = rows?.length;
+
   return (
     <Box sx={{ width: "100%", marginTop: "30px" }}>
       <Typography variant="h4" component="h2" sx={{ mb: 5 }}>
-        My Bookings ({bookings.length})
+        My Bookings ({totalBookings})
       </Typography>
-      <DataGrid
-        rows={
-          bookings.map((booking: any) => ({
-            id: booking?.id,
-            status: booking?.status,
-            createdAt: new Date(booking.createdAt).toLocaleString() || "",
-            flatLocation: booking?.flat?.location || "",
-            flatSquareFeet: booking?.flat?.squareFeet || 0,
-            flatBedrooms: booking?.flat?.totalBedrooms || 0,
-            flatRooms: booking?.flat?.totalRooms || 0,
-            flatRent: booking?.flat?.rent || 0,
-            flatDescription: booking?.flat?.description || "",
-            flatUtilities: booking?.flat?.utilitiesDescription || "",
-            flatPhoto: booking?.flat?.photos[0] || "",
-          })) || []
-        }
-        columns={columns}
-        autoHeight
-        rowHeight={90}
-      />
+      <DataGrid rows={rows} columns={columns} autoHeight rowHeight={90} />
     </Box>
   );
 };
