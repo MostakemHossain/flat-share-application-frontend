@@ -33,7 +33,7 @@ const MyBookings = () => {
         id: id,
       }).unwrap();
       if (res.id) {
-        toast.success("Booking Approval successfully");
+        toast.success("Booking Approval Successfully");
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -67,7 +67,7 @@ const MyBookings = () => {
       width: 150,
       renderCell: (params: GridRenderCellParams) => (
         <Select
-          value={params.value}
+          value={params?.value}
           onChange={(e) => handleStatusChange(params.row.id, e.target.value)}
           sx={{ width: "100%" }}
         >
@@ -89,17 +89,15 @@ const MyBookings = () => {
     data?.data?.map((booking: any) => ({
       id: booking?.id,
       status: booking?.status,
-      createdAt: booking?.createdAt
-        ? new Date(booking.createdAt).toLocaleString()
-        : "N/A",
-      flatLocation: booking?.flat?.location || "N/A",
-      flatSquareFeet: booking?.flat?.squareFeet || 0,
-      flatBedrooms: booking?.flat?.totalBedrooms || 0,
-      flatRooms: booking?.flat?.totalRooms || 0,
-      flatRent: booking.flat?.rent || 0,
-      flatDescription: booking.flat?.description || "N/A",
-      flatUtilities: booking.flat?.utilitiesDescription || "N/A",
-      flatPhoto: booking.flat?.photos?.[0] || "https://via.placeholder.com/150",
+      createdAt: new Date(booking?.createdAt).toLocaleString() || "",
+      flatLocation: booking?.flat?.location || "",
+      flatSquareFeet: booking?.flat?.squareFeet || "",
+      flatBedrooms: booking?.flat?.totalBedrooms || "",
+      flatRooms: booking?.flat?.totalRooms || "",
+      flatRent: booking?.flat?.rent || "",
+      flatDescription: booking?.flat?.description || "",
+      flatUtilities: booking?.flat?.utilitiesDescription || "",
+      flatPhoto: booking?.flat?.photos[0] || "",
     })) || [];
 
   const totalBookings = rows?.length;
