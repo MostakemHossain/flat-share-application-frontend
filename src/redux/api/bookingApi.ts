@@ -18,12 +18,27 @@ const bookingApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.booking],
     }),
-    deleteContact: build.mutation({
-      query: (contactId) => ({
-        url: `/contact/${contactId}`,
-        method: "DELETE",
+    getALLBookingRequest: build.query({
+      query: () => ({
+        url: `/bookings/all-booking-request`,
+        method: "GET",
       }),
-      invalidatesTags: [tagTypes.contacts],
+      providesTags: [tagTypes.booking],
+    }),
+    approvedBookingRequest: build.mutation({
+      query: ({ data, id }) => {
+        console.log("Data being sent:", data);
+        console.log("Booking ID:", id);
+        return {
+          url: `/bookings/approved-booking/${id}`,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "PUT",
+         data,
+        };
+      },
+      invalidatesTags: [tagTypes.booking],
     }),
   }),
 });
@@ -31,5 +46,6 @@ const bookingApi = baseApi.injectEndpoints({
 export const {
   useCreateBookingMutation,
   useGetMyBookingsQuery,
-  useDeleteContactMutation,
+  useGetALLBookingRequestQuery,
+  useApprovedBookingRequestMutation,
 } = bookingApi;

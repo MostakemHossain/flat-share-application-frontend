@@ -1,15 +1,43 @@
 "use client";
-import { useGetMyBookingsQuery } from "@/redux/api/bookingApi";
-import { Avatar, Box, Chip, Skeleton, Typography } from "@mui/material";
+import {
+  useApprovedBookingRequestMutation,
+  useGetALLBookingRequestQuery,
+} from "@/redux/api/bookingApi";
+import {
+  Avatar,
+  Box,
+  Chip,
+  MenuItem,
+  Select,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { toast } from "sonner";
 
 const MyBookings = () => {
-  const { data, isLoading } = useGetMyBookingsQuery({});
+  const { data, isLoading } = useGetALLBookingRequestQuery({});
+  const [approvedBookingRequest] = useApprovedBookingRequestMutation();
 
+  const statusOptions = ["PENDING", "BOOKING", "REJECTED"];
   const statusColors: { [key: string]: "warning" | "success" | "error" } = {
     PENDING: "warning",
     BOOKING: "success",
     REJECTED: "error",
+  };
+
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    try {
+      const res = await approvedBookingRequest({
+        data: { status: newStatus },
+        id: id,
+      }).unwrap();
+      if (res.id) {
+        toast.success("Booking Approval successfully");
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   const columns: GridColDef[] = [
@@ -25,29 +53,34 @@ const MyBookings = () => {
         />
       ),
     },
-
     { field: "flatLocation", headerName: "Flat Location", width: 200 },
     { field: "flatSquareFeet", headerName: "Square Feet", width: 120 },
     { field: "flatBedrooms", headerName: "Bedrooms", width: 120 },
     { field: "flatRooms", headerName: "Rooms", width: 120 },
     { field: "flatRent", headerName: "Rent ($)", width: 120 },
     { field: "flatDescription", headerName: "Description", width: 400 },
-    {
-      field: "flatUtilities",
-      headerName: "Utilities",
-      width: 300,
-    },
-
+    { field: "flatUtilities", headerName: "Utilities", width: 300 },
     { field: "createdAt", headerName: "Created At", width: 200 },
     {
       field: "status",
       headerName: "Status",
       width: 150,
       renderCell: (params: GridRenderCellParams) => (
-        <Chip
-          label={params.value}
-          color={statusColors[params.value] || "default"}
-        />
+        <Select
+          value={params.value}
+          onChange={(e) => handleStatusChange(params.row.id, e.target.value)}
+          sx={{ width: "100%" }}
+        >
+          {statusOptions.map((option) => (
+            <MenuItem key={option} value={option}>
+              <Chip
+                label={option}
+                color={statusColors[option] || "default"}
+                sx={{ width: "100%" }}
+              />
+            </MenuItem>
+          ))}
+        </Select>
       ),
     },
   ];

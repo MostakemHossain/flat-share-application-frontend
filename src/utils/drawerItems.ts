@@ -2,6 +2,7 @@ import { USER_ROLE } from "@/constants/role";
 import { DrawerItem, userRole } from "@/types";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ApartmentIcon from "@mui/icons-material/Apartment";
+import BackpackIcon from "@mui/icons-material/Backpack";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import ContactMailIcon from "@mui/icons-material/ContactMail";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -30,6 +31,11 @@ export const drawerItems = (role: userRole) => {
           title: "Create Flat",
           icon: ApartmentIcon,
           path: `${role}/create-flat`,
+        },
+        {
+          title: "Manage Bookings",
+          icon: BackpackIcon,
+          path: `${role}/all-bookings`,
         },
         {
           title: "Manage Users",
@@ -64,6 +70,11 @@ export const drawerItems = (role: userRole) => {
           title: "Create Flat",
           icon: ApartmentIcon,
           path: `${role}/create-flat`,
+        },
+        {
+          title: "Manage Bookings",
+          icon: BackpackIcon,
+          path: `${role}/all-bookings`,
         },
         {
           title: "Manage Users",
