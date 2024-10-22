@@ -8,11 +8,17 @@ import ContactMailIcon from "@mui/icons-material/ContactMail";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
 import HolidayVillageIcon from "@mui/icons-material/HolidayVillage";
+import LockIcon from "@mui/icons-material/Lock";
 import ReviewsIcon from "@mui/icons-material/Reviews";
 
 export const drawerItems = (role: userRole) => {
   const roleMenus: DrawerItem[] = [];
   const defaultMenus = [
+    {
+      title: "Change Password",
+      icon: LockIcon,
+      path: `/change-password`,
+    },
     {
       title: "Profile",
       icon: AccountCircleIcon,
