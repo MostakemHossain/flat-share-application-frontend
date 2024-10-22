@@ -73,7 +73,7 @@ const ForgotPassword = () => {
             Forgot Your Password?
           </Typography>
           <Typography variant="body1" sx={{ mb: 4, color: "text.secondary" }}>
-            Enter your email and we'll send you a link to reset your password.
+            Enter your email and we will send you a link to reset your password.
           </Typography>
         </Stack>
 
