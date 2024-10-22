@@ -58,13 +58,11 @@ const SignInModal: React.FC<SignInModalProps> = ({
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const { data, isLoading } = useGetSingleUserQuery({});
 
   const handleLogin = async (data: FieldValues) => {
     setLoading(true);
     try {
       const res = await userLogin(data);
-      console.log(res.data);
 
       if (res?.data?.accessToken) {
         storeUserInfo({ accessToken: res?.data?.accessToken });
@@ -102,7 +100,6 @@ const SignInModal: React.FC<SignInModalProps> = ({
   };
 
   const handleDemoLogin = async (role: string) => {
-    console.log(role);
     let demoCredentials;
 
     switch (role) {

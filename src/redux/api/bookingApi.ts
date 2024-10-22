@@ -27,8 +27,7 @@ const bookingApi = baseApi.injectEndpoints({
     }),
     approvedBookingRequest: build.mutation({
       query: ({ data, id }) => {
-        console.log("Data being sent:", data);
-        console.log("Booking ID:", id);
+     
         return {
           url: `/bookings/approved-booking/${id}`,
           headers: {
