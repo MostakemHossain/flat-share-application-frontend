@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -18,12 +18,11 @@ const validationSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters long"),
 });
 
-const ResetPassword = () => {
+const ResetPasswordForm = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("userId");
   const token = searchParams.get("token");
   const router = useRouter();
-  console.log({ id, token });
 
   const [resetPassword] = useResetPasswordMutation();
 
@@ -124,6 +123,14 @@ const ResetPassword = () => {
         </FlatMatchForm>
       </Box>
     </Stack>
+  );
+};
+
+const ResetPassword = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 };
 
