@@ -4,9 +4,9 @@ import { Facebook, LinkedIn, Twitter } from "@mui/icons-material";
 import {
   Card,
   CardContent,
-  CircularProgress,
   Grid,
   IconButton,
+  Skeleton,
   Typography,
 } from "@mui/material";
 import Image from "next/image";
@@ -17,7 +17,11 @@ const Team = () => {
   if (isLoading) {
     return (
       <div style={{ textAlign: "center", padding: "2rem" }}>
-        <CircularProgress />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
       </div>
     );
   }
@@ -25,9 +29,14 @@ const Team = () => {
   return (
     <div style={{ padding: "2rem", textAlign: "center" }}>
       <Typography variant="h3" gutterBottom color={"#EC5312"}>
-      Our Best Agents
+        Our Best Agents
       </Typography>
-      <Typography variant="subtitle1" color="textSecondary" gutterBottom marginBottom={"20px"}>
+      <Typography
+        variant="subtitle1"
+        color="textSecondary"
+        gutterBottom
+        marginBottom={"20px"}
+      >
         Our team of professionals is dedicated to ensuring the best outcomes.
       </Typography>
 
@@ -35,16 +44,15 @@ const Team = () => {
         {data?.map((employee: any) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={employee.id}>
             <Card>
-            
               <div
                 style={{ position: "relative", width: "100%", height: "400px" }}
               >
                 <Image
                   src={employee?.profilePhoto || "/default-avatar.jpg"}
                   alt={employee?.name}
-                  layout="fill" 
+                  layout="fill"
                   objectFit="cover"
-                  style={{ borderRadius: "4px 4px 0 0" }} 
+                  style={{ borderRadius: "4px 4px 0 0" }}
                 />
               </div>
 
@@ -54,7 +62,6 @@ const Team = () => {
                   {employee?.role}
                 </Typography>
 
-               
                 <div style={{ marginTop: "1rem" }}>
                   {employee?.facebookLink && (
                     <IconButton
