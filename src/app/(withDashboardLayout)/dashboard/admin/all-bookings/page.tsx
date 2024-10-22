@@ -1,7 +1,8 @@
 "use client";
-import { authKey } from "@/constants/authKey";
-import { useApprovedBookingRequestMutation } from "@/redux/api/bookingApi";
-import { getFormLocalStorage } from "@/utils/local-storage";
+import {
+  useApprovedBookingRequestMutation,
+  useGetALLBookingRequestQuery,
+} from "@/redux/api/bookingApi";
 import {
   Avatar,
   Box,
@@ -12,14 +13,10 @@ import {
   Typography,
 } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const MyBookings = () => {
-  const [data, setData] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
+  const { data, isLoading } = useGetALLBookingRequestQuery({});
   const [approvedBookingRequest] = useApprovedBookingRequestMutation();
 
   const statusOptions = ["PENDING", "BOOKING", "REJECTED"];
@@ -28,39 +25,6 @@ const MyBookings = () => {
     BOOKING: "success",
     REJECTED: "error",
   };
-
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const token = await getFormLocalStorage(authKey);
-
-        const response = await fetch(
-          "https://flat-match-backend.vercel.app/api/v1/bookings/all-booking-request",
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch bookings");
-        }
-
-        const result = await response.json();
-        setData(result.data);
-      } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchBookings();
-  }, []);
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
@@ -120,7 +84,6 @@ const MyBookings = () => {
       ),
     },
   ];
-
   if (isLoading) {
     return (
       <Box
@@ -138,16 +101,8 @@ const MyBookings = () => {
     );
   }
 
-  if (error) {
-    return (
-      <Box sx={{ color: "error.main", textAlign: "center", marginTop: 3 }}>
-        <Typography variant="h6">{error}</Typography>
-      </Box>
-    );
-  }
-
   const rows =
-    data?.map((booking: any) => ({
+    data?.data?.map((booking: any) => ({
       id: booking?.id,
       status: booking?.status,
       createdAt: new Date(booking.createdAt).toLocaleString() || "",
@@ -162,6 +117,8 @@ const MyBookings = () => {
     })) || [];
 
   const totalBookings = rows?.length;
+
+  
 
   return (
     <Box sx={{ width: "100%", marginTop: "30px" }}>

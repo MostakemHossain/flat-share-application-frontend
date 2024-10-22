@@ -25,13 +25,19 @@ const MyBookings = () => {
         />
       ),
     },
+
     { field: "flatLocation", headerName: "Flat Location", width: 200 },
     { field: "flatSquareFeet", headerName: "Square Feet", width: 120 },
     { field: "flatBedrooms", headerName: "Bedrooms", width: 120 },
     { field: "flatRooms", headerName: "Rooms", width: 120 },
     { field: "flatRent", headerName: "Rent ($)", width: 120 },
     { field: "flatDescription", headerName: "Description", width: 400 },
-    { field: "flatUtilities", headerName: "Utilities", width: 300 },
+    {
+      field: "flatUtilities",
+      headerName: "Utilities",
+      width: 300,
+    },
+
     { field: "createdAt", headerName: "Created At", width: 200 },
     {
       field: "status",
@@ -39,12 +45,29 @@ const MyBookings = () => {
       width: 150,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
-          label={params?.value}
-          color={statusColors[params?.value] || "default"}
+          label={params.value}
+          color={statusColors[params.value] || "default"}
         />
       ),
     },
   ];
+
+  const rows =
+    data?.map((booking: any) => ({
+      id: booking?.id,
+      status: booking?.status,
+      createdAt: new Date(booking.createdAt).toLocaleString(),
+      flatLocation: booking?.flat?.location,
+      flatSquareFeet: booking?.flat?.squareFeet,
+      flatBedrooms: booking?.flat?.totalBedrooms,
+      flatRooms: booking?.flat?.totalRooms,
+      flatRent: booking?.flat?.rent,
+      flatDescription: booking?.flat?.description,
+      flatUtilities: booking?.flat?.utilitiesDescription,
+      flatPhoto: booking?.flat?.photos[0],
+    })) || [];
+
+  const totalBookings = rows?.length;
 
   if (isLoading) {
     return (
@@ -65,29 +88,10 @@ const MyBookings = () => {
 
   return (
     <Box sx={{ width: "100%", marginTop: "30px" }}>
-      <Typography variant="h4" component="h2" sx={{ mb: 5 }}>
-        My Bookings ({data?.data?.length || 0})
+      <Typography variant="h4" component="h2" sx={{ mb: 2, mt: 3 }}>
+        My Bookings ({totalBookings})
       </Typography>
-      <DataGrid
-        rows={
-          data?.data?.map((booking: any) => ({
-            id: booking?.id,
-            status: booking?.status,
-            createdAt: new Date(booking?.createdAt).toLocaleString(),
-            flatLocation: booking?.flat?.location,
-            flatSquareFeet: booking?.flat?.squareFeet,
-            flatBedrooms: booking?.flat?.totalBedrooms,
-            flatRooms: booking?.flat?.totalRooms,
-            flatRent: booking?.flat?.rent,
-            flatDescription: booking?.flat?.description,
-            flatUtilities: booking?.flat?.utilitiesDescription,
-            flatPhoto: booking?.flat?.photos[0],
-          })) || []
-        }
-        columns={columns}
-        autoHeight
-        rowHeight={90}
-      />
+      <DataGrid rows={rows} columns={columns} autoHeight rowHeight={90} />
     </Box>
   );
 };
